@@ -303,7 +303,6 @@ content.columnconfigure(2, weight=3)
 content.columnconfigure(3, weight=3)
 content.columnconfigure(4, weight=3)
 content.rowconfigure(1, weight=1)
-
 # state_list = ['s', 't', 'u', 'v']
 # label_list_states = ['s', 't', 'u', 'v']
 # label_node_state = dict(zip(state_list, label_list_states))

@@ -1,6 +1,6 @@
 from copy import deepcopy
 import itertools
-# ok, ich hab die relation nicht an die zustände angepasst
+
 state_list_1= {'s1', 't1', 'u1', 'v1'}
 state_list_2 = {'s2', 't2'}
 all_states = state_list_1.union(state_list_2)
@@ -214,8 +214,8 @@ def calculate_bisimulation(uc_dict, states):
     return current_relation
 
 
-# bisimation = calculate_bisimulation(uc_dictionary, all_states)
-# print('bitte bisimulation', bisimation)
+bisimation = calculate_bisimulation(uc_dictionary, all_states)
+print('bisimulation', bisimation)
 # cr = (calculate_coarsest_relation(state_list_1, state_list_2))
 # print(get_equivalence_classes())
 # with_nh, without_nh = get_list_with_without_neighbourhoods(uc_dictionary, all_states)
@@ -228,11 +228,3 @@ def calculate_bisimulation(uc_dict, states):
 # todo es sind auch paare aus demselben system drin
 # so_jetzt = [('t2', 't2'), ('t2', 't1'), ('t2', 'v1'), ('t1', 't2'), ('t1', 't1'), ('t1', 'v1'), ('v1', 't2'), ('v1', 't1'), ('v1', 'v1')]
 
-#irgendwie wurden die zustände s und u komplett rausgeschmissen
-# ok jetzt wurde nichts rausgeschmissen
-so_jetzt = [('t2', 'v1'), ('t2', 't2'), ('t2', 't1'), ('s2', 's2'), ('t1', 'v1'), ('t1', 't2'), ('t1', 't1'), ('u1', 'u1'), ('v1', 'v1'), ('v1', 't2'), ('v1', 't1'), ('s1', 's1')]
-
-
-
-# todo blöcke oder klassen machen keinen sinn, sonst sieht es garnicht schlecht aus
-# es fehlt eigentlich nur das paar s1, s2
