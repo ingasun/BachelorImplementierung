@@ -174,12 +174,12 @@ def calculate_new_relation(blocks_, an_relation):
                 # klar dass das nicht geht, weil ja nur eins leer sein muss oder ?
                 # if not has_subset_tilde_1 and not has_tilde_2:
                 #     continue
-                if not(any(has_subset_tilde_1)) and any(has_tilde_2):
+                if not(any(has_subset_tilde_1) or is_set_1) and any(has_tilde_2):
                     print('removed tuple', tuple_)
                     an_relation.remove(tuple_)
                     update_happened = True
                     continue
-                if any(has_subset_tilde_1) and not(any(has_tilde_2)):
+                if any(has_subset_tilde_1) and not(any(has_tilde_2) or is_set_2):
                     print('removed tuple', tuple_)
                     an_relation.remove(tuple_)
                     update_happened = True
@@ -227,4 +227,4 @@ print('bisimulation', bisimation)
 # musterlösung = {(s1 , s2 ), (t1 , t2 ), (v1 , t2 )}
 # todo es sind auch paare aus demselben system drin
 # so_jetzt = [('t2', 't2'), ('t2', 't1'), ('t2', 'v1'), ('t1', 't2'), ('t1', 't1'), ('t1', 'v1'), ('v1', 't2'), ('v1', 't1'), ('v1', 'v1')]
-
+# so jetzt_ = [('t1', 't1'), ('t1', 't2'), ('t1', 'v1'), ('t2', 't1'), ('t2', 't2'), ('t2', 'v1'), ('s2', 's1'), ('s2', 's2'), ('s1', 's1'), ('s1', 's2'), ('u1', 'u1'), ('v1', 't1'), ('v1', 't2'), ('v1', 'v1')]
