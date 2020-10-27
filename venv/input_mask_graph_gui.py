@@ -67,6 +67,22 @@ def store_all_upper_closures():
     list_with_all_uc_stuff = pi.process_input(list_with_uc_content)
 
 
+list_with_all_uc_entries_2 = []
+
+# diese Funktion bauche ich auch für den zweiten NHF
+def store_all_upper_closures_2():
+    global list_with_all_uc_stuff_2
+    global state_list_2
+    state_list_2 = input_states_2.get().split(' ')
+    print(state_list_2)
+    print(len(state_list_2))
+
+    list_with_uc_content_2 = []
+    for entry in list_with_all_uc_entries_2:
+        list_with_uc_content_2.append(entry.get())
+    print(list_with_uc_content_2)
+    list_with_all_uc_stuff_2 = pi.process_input(list_with_uc_content_2)
+
 
 # def store_all_upper_closures():
 #     get_state_list()
@@ -103,8 +119,8 @@ frame_2 = LabelFrame(root, text='Eingabe Graph 2', font=11, padx=130, pady=80)
 frame_1.grid(row=0, sticky='ew')
 frame_2.grid(row=1, sticky='ew')
 
-num_1 = IntVar(frame_1, value=5)
-num_2 = IntVar(frame_2, value=4)
+num_1 = IntVar(frame_1, value=1)
+num_2 = IntVar(frame_2, value=1)
 
 input_label_1 = Label(frame_1, text='Wieviele Zustände mit uc hat system 1?', padx=20, pady=10)
 input_entries_1 = Entry(frame_1, borderwidth=5, textvariable=num_1)
@@ -166,40 +182,70 @@ label_uc.grid(row=2, column=1)
 input_confirm_button = Button(frame_1, text='Eingabe bestätigen', command=lambda: store_all_upper_closures())
 input_confirm_button.grid(row=20, pady=20)
 
-# Eingabefelder Graph2
-default_state_string_2 = StringVar(frame_1, value="s2 t2")
-v22 = StringVar(frame_2, value="s2 = t2")
-v3 = StringVar(frame_2, value="{}")
-v4 = StringVar(frame_2, value="{}")
-input_states_text2 = Label(frame_2, text='Zustände für Graph 1 angeben, bitte mit Leerzeichen trennen', padx=20, pady=10)
-input_states2 = Entry(frame_2, borderwidth=5, textvariable=default_state_string_2)
-input_uc_text2 = Label(frame_2, text='Upper Closure der Zustände angeben', pady=10)
-label_states2 = Label(frame_2, text='Zustand', pady=20)
-label_uc2 = Label(frame_2, text='Upward Closure', pady=20)
-input_uc_1_2 = Entry(frame_2, borderwidth=5, textvariable=v22)
-input_uc_2_2 = Entry(frame_2, borderwidth=5, textvariable=v3)
-input_uc_3_2 = Entry(frame_2, borderwidth=5, textvariable=v4)
-input_uc_state_1_2 = Entry(frame_2, width=7, borderwidth=5)
-input_uc_state_2_2 = Entry(frame_2, width=7, borderwidth=5)
-input_uc_state_3_2 = Entry(frame_2, width=7, borderwidth=5)
+# Eingabefelder Graph2 neu
 
-input_confirm_button2 = Button(frame_2, text='Eingabe bestätigen')
+default_state_string_2 = StringVar(frame_2, value="s2 t2")
+v2 = StringVar(frame_1, value="s2: t2, t1")
+
+# eingabefelder für graph 1
+input_states_text_2 = Label(frame_2, text='Zustände für Graph 2 angeben, bitte mit Leerzeichen trennen', padx=20, pady=10)
+input_states_2 = Entry(frame_2, borderwidth=5, textvariable=default_state_string_2)
+input_uc_text_2 = Label(frame_2, text='Zustände mit upper closures angeben, Eingabe soll so aussehen: s1: s1, t1; u1, v1', pady=10)
+
+label_uc_2 = Label(frame_2, text='Zustand mit seiner Upward Closure', pady=20)
+for x in range(3, (int(number_of_states_with_uc_2) + 3)):
+    uc_input_ = Entry(frame_2, borderwidth=5, textvariable=v2)
+    uc_input_.grid(row=x, column=1, pady=5, padx=5)
+    list_with_all_uc_entries_2.append(uc_input_)
+
+
+input_states_text_2.grid(row=0, column=0)
+input_states_2.grid(row=0, column=1)
+input_uc_text_2.grid(row=3, column=0, sticky='ew')
+label_uc_2.grid(row=2, column=1)
+
+input_confirm_button_2 = Button(frame_2, text='Eingabe bestätigen', command=lambda: store_all_upper_closures_2())
+input_confirm_button_2.grid(row=20, pady=20)
 switch_to_next_window_button = Button(frame_2, text='Spiel starten', command=close_window)
-
-
-input_states_text2.grid(row=0, column=0)
-input_states2.grid(row=0, column=1)
-input_uc_text2.grid(row=1, column=0, sticky='ew')
-label_states2.grid(row=2, column=0)
-label_uc2.grid(row=2, column=1)
-input_uc_1_2.grid(row=3, column=1)
-input_uc_2_2.grid(row=4, column=1)
-input_uc_3_2.grid(row=5, column=1)
-input_uc_state_1_2.grid(row=3, column=0)
-input_uc_state_2_2.grid(row=4, column=0)
-input_uc_state_3_2.grid(row=5, column=0)
-input_confirm_button2.grid(row=6, column=0, pady=20)
 switch_to_next_window_button.grid(row=6, column=1, pady=20)
+# input_confirm_button2 = Button(frame_2, text='Eingabe bestätigen')
+
+
+
+# Eingabefelder alt
+# default_state_string_2 = StringVar(frame_1, value="s2 t2")
+# v22 = StringVar(frame_2, value="s2 = t2")
+# v3 = StringVar(frame_2, value="{}")
+# v4 = StringVar(frame_2, value="{}")
+# input_states_text2 = Label(frame_2, text='Zustände für Graph 1 angeben, bitte mit Leerzeichen trennen', padx=20, pady=10)
+# input_states2 = Entry(frame_2, borderwidth=5, textvariable=default_state_string_2)
+# input_uc_text2 = Label(frame_2, text='Upper Closure der Zustände angeben', pady=10)
+# label_states2 = Label(frame_2, text='Zustand', pady=20)
+# label_uc2 = Label(frame_2, text='Upward Closure', pady=20)
+# input_uc_1_2 = Entry(frame_2, borderwidth=5, textvariable=v22)
+# input_uc_2_2 = Entry(frame_2, borderwidth=5, textvariable=v3)
+# input_uc_3_2 = Entry(frame_2, borderwidth=5, textvariable=v4)
+# input_uc_state_1_2 = Entry(frame_2, width=7, borderwidth=5)
+# input_uc_state_2_2 = Entry(frame_2, width=7, borderwidth=5)
+# input_uc_state_3_2 = Entry(frame_2, width=7, borderwidth=5)
+#
+# input_confirm_button2 = Button(frame_2, text='Eingabe bestätigen')
+# switch_to_next_window_button = Button(frame_2, text='Spiel starten', command=close_window)
+#
+#
+# input_states_text2.grid(row=0, column=0)
+# input_states2.grid(row=0, column=1)
+# input_uc_text2.grid(row=1, column=0, sticky='ew')
+# label_states2.grid(row=2, column=0)
+# label_uc2.grid(row=2, column=1)
+# input_uc_1_2.grid(row=3, column=1)
+# input_uc_2_2.grid(row=4, column=1)
+# input_uc_3_2.grid(row=5, column=1)
+# input_uc_state_1_2.grid(row=3, column=0)
+# input_uc_state_2_2.grid(row=4, column=0)
+# input_uc_state_3_2.grid(row=5, column=0)
+# input_confirm_button2.grid(row=6, column=0, pady=20)
+# switch_to_next_window_button.grid(row=6, column=1, pady=20)
 
 
 # # das wird ausgeführt bevor das Fenster zu sehen ist, muss irgenwo anders hin oder in einen Thread
@@ -235,7 +281,8 @@ root.mainloop()
 # hier jetzt die gesamtlisten der edges und nodes erstellen
 
 intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state = ucd.get_all_graph_stuff_for_system(state_list, list_with_all_uc_stuff) # vorher uc_input...
-
+# todo hier noch mal die Funktion für den zweiten NHF aufrufen
+intermediate_node_list_2, edgelist_main_states_2, label_intermediate_states_2, label_node_main_state_2 = ucd.get_all_graph_stuff_for_system(state_list_2, list_with_all_uc_stuff_2) # vorher uc_input...
 # print('edgelist fertig', edgelist_main_states)
 # print('zwischenzustände', intermediate_node_list)
 # print('label', label_intermediate_states)
@@ -365,6 +412,39 @@ nx.draw_networkx_labels(G, pos=pos_attrs, labels=label_intermediate_states, font
 
 #plt.show()
 canvas.get_tk_widget().grid()
+
+# hier jetzt die Sachen für den 2. Graph:
+
+G_2 = nx.DiGraph()
+
+
+G_2.add_nodes_from(state_list_2)
+G_2.add_edges_from(edgelist_main_states_2)
+G_2.add_nodes_from(intermediate_node_list_2)
+
+# das layout muss nachdem alle Knoten und edges hinzugefügt wurden und bevor der graph gezeichnet wird gesetzt werden
+pos = nx.nx_agraph.graphviz_layout(G_2, prog='circo')
+# pos = nx.kamada_kawai_layout(G)
+f_2 = plt.figure(figsize=(5, 5))
+canvas_2 = FigureCanvasTkAgg(f_2, root)
+
+
+nx.draw_networkx_nodes(G_2, pos=pos, nodelist=state_list_2, node_size=1000)
+nx.draw_networkx_nodes(G_2, pos=pos, nodelist=intermediate_node_list_2, node_size=25)
+nx.draw_networkx_edges(G_2, pos=pos, edgelist=edgelist_main_states_2)
+
+nx.draw_networkx_labels(G_2, pos=pos, labels=label_node_main_state_2, font_size=7, font_family='sans-serif')
+pos_attrs = {}
+for node, coords in pos.items():
+    pos_attrs[node] = (coords[0], coords[1] - 2)
+nx.draw_networkx_labels(G_2, pos=pos_attrs, labels=label_intermediate_states_2, font_size=7, font_family='sans-serif')
+# nx.draw_networkx(G, with_label=True, node_color='green', pos=nx.spring_layout(G))
+
+# K3 Graph zeichnen
+#nx.draw_networkx(K3, with_label=True, node_color='green', pos=nx.spring_layout(K3))
+
+#plt.show()
+canvas_2.get_tk_widget().grid()
 
 
 root.mainloop()
