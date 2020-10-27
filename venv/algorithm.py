@@ -16,7 +16,7 @@ uc_dictionary = {}
 for item in all_closures:
     for val in item[0]:
         uc_dictionary[val] = item[1]
-print(uc_dictionary)
+# print(uc_dictionary)
 # print(all_closures)
 
 
@@ -93,15 +93,15 @@ def calculate_new_relation(blocks_, an_relation):
     update_happened = False
     # eliminate empty list from blocks
     blocks = [x for x in blocks_ if x]
-    print('blocks', blocks)
+    # print('blocks', blocks)
     for block in blocks:
-        print('block', block)
+        # print('block', block)
         # Klassen von Block vereinigen um Teilmengenbeziehung zu prüfen
         union_class_list = [item for sublist in block for item in sublist]
-        print('union class list', union_class_list)
+        # print('union class list', union_class_list)
         # jetzt für alle tupel durchschauen ob die Zustände darin oder deren ucs teilmenge der Blöcke sind
         for tuple_ in an_relation:  # tuple mit Zuständen x, y
-            print('tuple_', tuple_)
+            # print('tuple_', tuple_)
             # es werden nur Zustände, die beide eine uc haben überprüft, da die unterschiedlichen schon ausgesiebt wurden
             # und die, die beide eine haben eh drin bleiben
             if tuple_[0] in uc_dictionary.keys() and tuple_[1] in uc_dictionary.keys():
@@ -109,43 +109,43 @@ def calculate_new_relation(blocks_, an_relation):
                 # jetzt die uc mit for_Schleife durchgehen
                 for uc in uc_dictionary.get(tuple_[0]):
                     is_set_1 = []
-                    print('uc 1', uc)
+                    # print('uc 1', uc)
                     is_set_1_ = all(x in union_class_list for x in uc)
                     # one = [1, 2, 3]
                     # two = [9, 8, 5, 3, 2, 1]
                     # all(x in two for x in one)
                     # set(one).issubset(set(two))
-                    print('is set 1', is_set_1_)
+                    # print('is set 1', is_set_1_)
                     if all(x in union_class_list for x in uc):
                         is_set_1.append(True)
                         # auf super set untersuchen
                         is_tilde_1 = []
                         for class_ in block:
-                            print('class', class_)
+                            # print('class', class_)
                             # hier wird geprüft ob der Schnitt von uc und Klasse leer ist oder nicht
                             if set(class_) & set(uc):
                                 # set(class_).intersection(uc) != set():
                                 is_tilde_1.append(True)
                             else:
                                 is_tilde_1.append(False)
-                        print('is_tilde_1', is_tilde_1)
+                        # print('is_tilde_1', is_tilde_1)
                         # hier wird geprüft ob uc mit keiner der Klassen des Blocks einen leeren Schnitt hat
                         if all(is_tilde_1):
                             has_subset_tilde_1.append(True)
                         else:
                             has_subset_tilde_1.append(False)
-                print('has tilde_1', has_subset_tilde_1)
+                # print('has tilde_1', has_subset_tilde_1)
                 # das gleiche jetzt für den anderen Zustand
                 has_tilde_2 = []
                 for uc_ in uc_dictionary.get(tuple_[1]):
                     is_set_2 = []
                     is_tilde_2 = []
-                    print('uc_2', uc_)
-                    print('is_set_2', all(x in union_class_list for x in uc_))
+                    # print('uc_2', uc_)
+                    # print('is_set_2', all(x in union_class_list for x in uc_))
                     if all(x in union_class_list for x in uc_):
                         is_set_2.append(True)
                         for class_ in block:
-                            print('class', class_)
+                            # print('class', class_)
                             # is_tilde_2 = []
                             if set(class_) & set(uc_):
                                 is_tilde_2.append(True)
@@ -155,8 +155,8 @@ def calculate_new_relation(blocks_, an_relation):
                             has_tilde_2.append(True)
                         else:
                             has_tilde_2.append(False)
-                        print('is_tilde2', is_tilde_2)
-                print('has tilde 2', has_tilde_2)
+                        # print('is_tilde2', is_tilde_2)
+                # print('has tilde 2', has_tilde_2)
                 # if not is_set_1 and not is_set_2:
                 #     continue
                 # if not(all(is_set_1) and not(all(is_set_2))):
@@ -175,12 +175,12 @@ def calculate_new_relation(blocks_, an_relation):
                 # if not has_subset_tilde_1 and not has_tilde_2:
                 #     continue
                 if not(any(has_subset_tilde_1) or is_set_1) and any(has_tilde_2):
-                    print('removed tuple', tuple_)
+                    # print('removed tuple', tuple_)
                     an_relation.remove(tuple_)
                     update_happened = True
                     continue
                 if any(has_subset_tilde_1) and not(any(has_tilde_2) or is_set_2):
-                    print('removed tuple', tuple_)
+                    # print('removed tuple', tuple_)
                     an_relation.remove(tuple_)
                     update_happened = True
     return update_happened, an_relation
@@ -206,16 +206,16 @@ def calculate_bisimulation(uc_dict, states):
         # temp_rel = current_relation
         # hier kommen jetzt die Funktionsaufrufe
         classes = get_equivalence_classes(current_relation, all_states)
-        print('classes', classes)
+        # print('classes', classes)
         blocks = calculate_blocks(classes)
-        print('blocks', blocks)
+        # print('blocks', blocks)
         updateshappened, relation_before = calculate_new_relation(blocks, current_relation)
-        print(updateshappened, relation_before)
+        # print(updateshappened, relation_before)
     return current_relation
 
 
-bisimation = calculate_bisimulation(uc_dictionary, all_states)
-print('bisimulation', bisimation)
+# bisimation = calculate_bisimulation(uc_dictionary, all_states)
+# print('bisimulation', bisimation)
 # cr = (calculate_coarsest_relation(state_list_1, state_list_2))
 # print(get_equivalence_classes())
 # with_nh, without_nh = get_list_with_without_neighbourhoods(uc_dictionary, all_states)
@@ -225,6 +225,6 @@ print('bisimulation', bisimation)
 # print('without Nh', without_tuple_different_nh)
 
 # musterlösung = {(s1 , s2 ), (t1 , t2 ), (v1 , t2 )}
-# todo es sind auch paare aus demselben system drin
+# todo es sind auch paare aus demselben system drin und u1 wurde auch entfernt zuerst...
 # so_jetzt = [('t2', 't2'), ('t2', 't1'), ('t2', 'v1'), ('t1', 't2'), ('t1', 't1'), ('t1', 'v1'), ('v1', 't2'), ('v1', 't1'), ('v1', 'v1')]
 # so jetzt_ = [('t1', 't1'), ('t1', 't2'), ('t1', 'v1'), ('t2', 't1'), ('t2', 't2'), ('t2', 'v1'), ('s2', 's1'), ('s2', 's2'), ('s1', 's1'), ('s1', 's2'), ('u1', 'u1'), ('v1', 't1'), ('v1', 't2'), ('v1', 'v1')]

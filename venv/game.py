@@ -1,10 +1,21 @@
 import algorithm as alg
 
+# inp_ = str(input('gib was ein'))
+# print(inp_)
+#
+#
+# def func(inp):
+#     list_ = ['u1', 'v1', 'bla']
+#     print(inp in list_)
+#
+#
+# func(inp_)
 uc_dict = {'s1': [['t1'], ['u1', 'v1']], 'u1': [['u1']], 's2': [['t2']]}
 
 list_with_recently_picked_states = []
 all_states = ['s1', 't1', 'u1', 'v1', 's2', 't2']
-
+bisimulation = alg.calculate_bisimulation(uc_dict, all_states)
+print(bisimulation)
 list_with_recently_picked_states = []
 # das Spiel soll mindestens solange laufen, bis Spieler 1 keinen Zustand mehr wählen kann oder will
 while all_states != list_with_recently_picked_states:
@@ -27,27 +38,52 @@ while all_states != list_with_recently_picked_states:
         nh_1__ = input('jetzt NH wählen Spieler 1: ')
         nh_1_ = nh_1__.lstrip().split(', ')
         nh_1 = nh_1_[0]
-        print(nh_1)
-        for item in uc_dict.get(state_1):
-            if nh_1 not in item:
-                print('Das ist kein NH des gewählten Zustandes')
-                break
-        nh_2 = input('jetzt NH wählen Spieler 2: ')
-        print(nh_2)
+        print(nh_1_)
+        if nh_1_ not in uc_dict.get(state_1):
+            print('Das ist kein NH des gewählten Zustandes')
+
+        # hier wird direkt abgebrochen wenn die erste uc nicht dem NH entspricht
+        # for item in uc_dict.get(state_1):
+        #     print('item', item)
+        #     if nh_1 not in item:
+        #         print('Das ist kein NH des gewählten Zustandes')
+        #         break
+        nh_2__ = input('jetzt NH wählen Spieler 2: ')
+        nh_2_ = nh_2__.lstrip().split(', ')
+        nh_2 = nh_2_[0]
+        print(nh_2_)
         # hier muss wahrscheinlich der input noch angepasst werden, vielleicht mit list()
-        for item in uc_dict.get(state_2):
-            if nh_2 not in item:
-                print('Das ist kein NH des gewählten Zustandes')
-                break # hier wird nur die for-Schleife beendet bis jetzt
+
+        if nh_2_ not in uc_dict.get(state_2):
+            print('Das ist kein NH des gewählten Zustandes')
+            break # hier wird nur die for-Schleife beendet bis jetzt
         # jetz muss Spieler 1 in den Nh von Spieler 2 wechseln
-        state_in_NH_1 = input('Spieler 1: wähle Zustand aus NH von Spieler 2 ')
-        state_in_NH_2 = input('Spieler 1: wähle Zustand aus NH von Spieler 1, der dazu bisimular ist ')
-        if state_in_NH_1 not in nh_2:
-            print('Der Zustand is da nicht drin')
-            break
-        if state_in_NH_2 not in nh_1:
-            print('Der Zustand is da nicht drin')
-            break
+
+        # hier mit for Schleife überprüfen, ob die Zustände bisimular sind bis Spieler 2 keinen mehr wählen kann
+        i = 0
+        for i in range(len(nh_2) - 1):
+            i = i+1
+            test = True
+            while test:
+                state_in_NH_1 = input('Spieler 1: wähle Zustand aus NH von Spieler 2 ')
+                if state_in_NH_1 not in nh_2_:
+                    print('Der Zustand is da nicht drin, nochmal')
+                    continue
+                state_in_NH_2 = input('Spieler 2: wähle Zustand aus NH von Spieler 1, der dazu bisimular ist ')
+                if state_in_NH_2 not in nh_1_:
+                    print('Der Zustand is da nicht drin, nochmal')
+                    continue
+                else:
+                    test = False
+            if (state_in_NH_1, state_in_NH_2) in bisimulation:
+                print('Ja sind bisimular')
+                continue
+            else:
+                print('Nicht bisimular, Spieler 1 hat gewonnen')
+                continue
+
+        # das müsste außerhalb der while Schleife stehen, wenn nach einem Zustandspaar wirklich Schluss sein soll
+        print('Spiel ist zuende')
         list_with_recently_picked_states.append(state_in_NH_1)
         if list_with_recently_picked_states == all_states:
             print('Spieler 2 kann alle Zustände matchen und hat gewonnen')
