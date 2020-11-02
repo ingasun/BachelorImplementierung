@@ -281,7 +281,7 @@ root.mainloop()
 # hier jetzt die gesamtlisten der edges und nodes erstellen
 
 intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state = ucd.get_all_graph_stuff_for_system(state_list, list_with_all_uc_stuff) # vorher uc_input...
-# todo hier noch mal die Funktion für den zweiten NHF aufrufen
+# hier wird noch mal die Funktion für den zweiten NHF aufrufen
 intermediate_node_list_2, edgelist_main_states_2, label_intermediate_states_2, label_node_main_state_2 = ucd.get_all_graph_stuff_for_system(state_list_2, list_with_all_uc_stuff_2) # vorher uc_input...
 # print('edgelist fertig', edgelist_main_states)
 # print('zwischenzustände', intermediate_node_list)
@@ -312,8 +312,14 @@ title = ttk.Label(frame, text='Bisimulation Game for NHF')
 chose_player_label = ttk.Label(frame, text='Choose player')
 player_chose_spoiler = ttk.Radiobutton(frame, text='Spoiler')
 player_chose_duplicator = ttk.Radiobutton(frame, text='Duplicator')
-start_game_button = ttk.Button(frame, text='Start Game')
-reset_game_button = ttk.Button(frame, text='Reset Game')
+label_input_player_1 = ttk.Label(frame, text='Eingabe Spoiler')
+input_player_1 = ttk.Entry(frame)
+label_input_player_2 = ttk.Label(frame, text='Eingabe Duplicator')
+input_player_2 = ttk.Entry(frame)
+announcement_label = ttk.Label(frame, text='Hier werden Anweisungen stehen')
+
+input_confirm_button_1 = ttk.Button(frame, text='Okay!')
+input_confirm_button_2 = ttk.Button(frame, text='Okay!')
 exit_game_button = ttk.Button(frame, text='Exit Game')
 
 # content Sachen
@@ -337,9 +343,15 @@ title.grid(row=0, padx=20, pady=20)
 chose_player_label.grid(row=1, column=0, padx=20, pady=20, sticky='W')
 player_chose_duplicator.grid(row=2, column=0, padx=20, sticky='W')
 player_chose_spoiler.grid(row=3, column=0, padx=20, sticky='W')
-start_game_button.grid(row=4, column=0, pady=20, padx=20, sticky='W')
-reset_game_button.grid(row=4, column=1, pady=20, padx=20, sticky='E')
-exit_game_button.grid(row=5, pady=20, padx=20, sticky='NEWS')
+label_input_player_1.grid(row=4, column=0, padx=20, sticky='W')
+label_input_player_2.grid(row=4, column=1, pady=20, padx=20, sticky='E')
+input_player_1.grid(row=5, column=0, padx=20, sticky='W')
+input_player_2.grid(row=5, column=1, padx=20, sticky='E')
+announcement_label.grid(row=6, padx=20, sticky='EW')
+
+input_confirm_button_1.grid(row=7, column=0, pady=20, padx=20, sticky='W')
+input_confirm_button_2.grid(row=7, column=1, pady=20, padx=20, sticky='E')
+exit_game_button.grid(row=8, pady=20, padx=20, sticky='NEWS')
 
 
 root.columnconfigure(0, weight=2)
@@ -411,7 +423,7 @@ nx.draw_networkx_labels(G, pos=pos_attrs, labels=label_intermediate_states, font
 #nx.draw_networkx(K3, with_label=True, node_color='green', pos=nx.spring_layout(K3))
 
 #plt.show()
-canvas.get_tk_widget().grid()
+canvas.get_tk_widget().grid(column=0, row=10)
 
 # hier jetzt die Sachen für den 2. Graph:
 
@@ -444,7 +456,7 @@ nx.draw_networkx_labels(G_2, pos=pos_attrs, labels=label_intermediate_states_2, 
 #nx.draw_networkx(K3, with_label=True, node_color='green', pos=nx.spring_layout(K3))
 
 #plt.show()
-canvas_2.get_tk_widget().grid()
+canvas_2.get_tk_widget().grid(column=1, row=10)
 
 
 root.mainloop()

@@ -91,7 +91,7 @@ while all_states != list_with_recently_picked_states:
 
 
 
-
+# todo es muss noch ausgeschlossen werden, dass Spieler 2 aus demselben NHF wählt
 
 
 
