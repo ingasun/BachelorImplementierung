@@ -11,8 +11,6 @@ import algorithm as alg
 #
 # func(inp_)
 uc_dict = {'s1': [['t1'], ['u1', 'v1']], 'u1': [['u1']], 's2': [['t2']]}
-
-list_with_recently_picked_states = []
 all_states = ['s1', 't1', 'u1', 'v1', 's2', 't2']
 bisimulation = alg.calculate_bisimulation(uc_dict, all_states)
 print(bisimulation)

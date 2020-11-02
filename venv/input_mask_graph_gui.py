@@ -3,24 +3,24 @@ import calculate_uc_dynamically as ucd
 import process_input as pi
 from tkinter import *
 from tkinter import ttk
-import random
-#from PIL import ImageTk, Image
-import numpy as np
+# import random
+# from PIL import ImageTk, Image
+# import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
-from matplotlib.pyplot import Figure
+# from matplotlib.pyplot import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from PIL import ImageTk, Image
 
 
 # Funktionen um an Eingaben zu kommen
-def get_state_list():
-    global state_list
-    state_list = input_states.get().split(' ')
-    print(state_list)
-    # return ist unnötig
-    # return state_list
+# def get_state_list():
+#     global state_list
+#     state_list = input_states.get().split(' ')
+#     print(state_list)
+#     # return ist unnötig
+#     # return state_list
 #
 #
 # def get_uc_1():
@@ -159,7 +159,7 @@ frame_2.grid(row=1, sticky='ew')
 
 default_state_string = StringVar(frame_1, value="s1 t1 u1 v1")
 v = StringVar(frame_1, value="s1: s1, t1; u1, v1")
-v2 = StringVar(frame_1, value="u = u")
+v2 = StringVar(frame_1, value="u1: u1")
 # noch nicht gesetzt
 v3 = StringVar(frame_1, value="{}")
 # eingabefelder für graph 1
@@ -169,7 +169,7 @@ input_uc_text = Label(frame_1, text='Zustände mit upper closures angeben, Einga
 
 label_uc = Label(frame_1, text='Zustand mit seiner Upward Closure', pady=20)
 for x in range(3, (int(number_of_states_with_uc_1) + 3)):
-    uc_input = Entry(frame_1, borderwidth=5, textvariable=v)
+    uc_input = Entry(frame_1, borderwidth=5)  # , textvariable=v
     uc_input.grid(row=x, column=1, pady=5, padx=5)
     list_with_all_uc_entries.append(uc_input)
 
@@ -281,8 +281,10 @@ root.mainloop()
 # hier jetzt die gesamtlisten der edges und nodes erstellen
 
 intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state = ucd.get_all_graph_stuff_for_system(state_list, list_with_all_uc_stuff) # vorher uc_input...
+print(intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state)
 # hier wird noch mal die Funktion für den zweiten NHF aufrufen
 intermediate_node_list_2, edgelist_main_states_2, label_intermediate_states_2, label_node_main_state_2 = ucd.get_all_graph_stuff_for_system(state_list_2, list_with_all_uc_stuff_2) # vorher uc_input...
+print(intermediate_node_list_2, edgelist_main_states_2, label_intermediate_states_2, label_node_main_state_2)
 # print('edgelist fertig', edgelist_main_states)
 # print('zwischenzustände', intermediate_node_list)
 # print('label', label_intermediate_states)
