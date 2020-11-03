@@ -36,7 +36,7 @@ while all_states != list_with_recently_picked_states:
 
     def spoiler_data():
         global user_input
-        user_input = input_player_1.get()
+        user_input = input_state_player_1.get()
         instruction_label.config(text="new text")
         # wird für eine sekunde angezeigt
         root.update_idletasks()
@@ -45,7 +45,7 @@ while all_states != list_with_recently_picked_states:
 
     def dublicator_data():
         global user_input_2
-        user_input_2 = input_player_2.get()
+        user_input_2 = input_state_player_2.get()
         instruction_label.config(text="new text")
         # wird für eine sekunde angezeigt
         root.update_idletasks()
@@ -137,9 +137,11 @@ chose_player_label = ttk.Label(frame, text='Choose player')
 player_chose_spoiler = ttk.Radiobutton(frame, text='Spoiler')
 player_chose_duplicator = ttk.Radiobutton(frame, text='Duplicator')
 label_input_player_1 = ttk.Label(frame, text='Eingabe Spoiler')
-input_player_1 = ttk.Entry(frame)
+input_state_player_1 = ttk.Entry(frame)
+input_nh_player_1 = ttk.Entry(frame)
 label_input_player_2 = ttk.Label(frame, text='Eingabe Duplicator')
-input_player_2 = ttk.Entry(frame)
+input_state_player_2 = ttk.Entry(frame)
+input_nh_player_2 = ttk.Entry(frame)
 instruction_label = ttk.Label(frame, text='Hier werden Anweisungen stehen')
 
 input_confirm_button_1 = ttk.Button(frame, text='Okay!', command=spoiler_data())
@@ -154,13 +156,15 @@ player_chose_duplicator.grid(row=2, column=0, padx=20, sticky='W')
 player_chose_spoiler.grid(row=3, column=0, padx=20, sticky='W')
 label_input_player_1.grid(row=4, column=0, padx=20, sticky='W')
 label_input_player_2.grid(row=4, column=1, pady=20, padx=20, sticky='E')
-input_player_1.grid(row=5, column=0, padx=20, sticky='W')
-input_player_2.grid(row=5, column=1, padx=20, sticky='E')
-instruction_label.grid(row=6, padx=20, sticky='EW')
+input_state_player_1.grid(row=5, column=0, padx=20, sticky='W')
+input_state_player_2.grid(row=5, column=1, padx=20, sticky='E')
+input_nh_player_1.grid(row=6, column=0, padx=20, sticky='W')
+input_state_nh_2.grid(row=6, column=1, padx=20, sticky='E')
+instruction_label.grid(row=7, padx=20, sticky='EW')
 
-input_confirm_button_1.grid(row=7, column=0, pady=20, padx=20, sticky='W')
-input_confirm_button_2.grid(row=7, column=1, pady=20, padx=20, sticky='E')
-exit_game_button.grid(row=8, pady=20, padx=20, sticky='NEWS')
+input_confirm_button_1.grid(row=8, column=0, pady=20, padx=20, sticky='W')
+input_confirm_button_2.grid(row=8, column=1, pady=20, padx=20, sticky='E')
+exit_game_button.grid(row=9, pady=20, padx=20, sticky='NEWS')
 
 
 root.columnconfigure(0, weight=2)

@@ -10,10 +10,51 @@ import algorithm as alg
 #
 #
 # func(inp_)
+
+# todo es muss noch ausgeschlossen werden, dass Spieler 2 aus demselben NHF wählt
+# todo es müssen alle upper closures als NH gewählt werden können
+
+
+# ich könnte 3 Funktionen schreiben, eine die direkt die gewählten zustände prüft
+# zustände und nh müssen in 2 verschiedenen zügen gewählt werden, da die spieler dann je nachdem entscheiden können
+# dann die wo Nh gewählt werden
+# dann wo die Zustände in den Nh überprüft werden
 uc_dict = {'s1': [['t1'], ['u1', 'v1']], 'u1': [['u1']], 's2': [['t2']]}
 all_states = ['s1', 't1', 'u1', 'v1', 's2', 't2']
 bisimulation = alg.calculate_bisimulation(uc_dict, all_states)
 print(bisimulation)
+
+
+def pick_states(all_states):
+    test = True
+    while test:
+        state_1 = input('Spieler 1 wähle Zustand ')
+        if state_1 not in all_states:
+            print('Ungültiger Zustand, nochmal')
+            continue
+        else:
+            list_with_recently_picked_states.append(state_1)
+            test = False
+        state_2 = input('Spieler 2 wähle Zustand ')
+
+    test_2 = True
+    while test_2:
+        if state_2 not in all_states:
+            print('Ungültiger Zustand, nochmal')
+            continue
+        else:
+            test = False
+
+    # erstmal checken, ob die Zustände beide NH haben
+    with_nh, without_nh = alg.get_list_with_without_neighbourhoods(uc_dict, all_states)
+    if (state_1 in with_nh and state_2 in without_nh) or (state_1 in without_nh and state_2 in with_nh):
+        # todo alert box dafür machen
+        print('Nicht bisimular, weitermachen')
+    if state_1 in without_nh and state_2 in without_nh:
+        print('Ja, die sind bisimular,')
+
+
+
 list_with_recently_picked_states = []
 # das Spiel soll mindestens solange laufen, bis Spieler 1 keinen Zustand mehr wählen kann oder will
 while all_states != list_with_recently_picked_states:
@@ -29,6 +70,7 @@ while all_states != list_with_recently_picked_states:
     # erstmal checken, ob die Zustände beide NH haben
     with_nh, without_nh = alg.get_list_with_without_neighbourhoods(uc_dict, all_states)
     if (state_1 in with_nh and state_2 in without_nh) or (state_1 in without_nh and state_2 in with_nh):
+        # todo alert box dafür machen
         print('Nicht bisimular, weitermachen')
     if state_1 in without_nh and state_2 in without_nh:
         print('Ja, die sind bisimular, weitermachen')
@@ -51,7 +93,6 @@ while all_states != list_with_recently_picked_states:
         nh_2 = nh_2_[0]
         print(nh_2_)
         # hier muss wahrscheinlich der input noch angepasst werden, vielleicht mit list()
-
         if nh_2_ not in uc_dict.get(state_2):
             print('Das ist kein NH des gewählten Zustandes')
             break # hier wird nur die for-Schleife beendet bis jetzt
@@ -89,7 +130,6 @@ while all_states != list_with_recently_picked_states:
 
 
 
-# todo es muss noch ausgeschlossen werden, dass Spieler 2 aus demselben NHF wählt
 
 
 
