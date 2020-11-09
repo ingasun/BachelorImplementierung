@@ -12,7 +12,7 @@ def get_input_spoiler():
     global spoiler_input
     spoiler_input = input_spoiler.get()
     input_spoiler.delete("0", "end")
-    print('in funktion', spoiler_input)
+    # print('in funktion', spoiler_input)
     var_1.set(1)
 
 
@@ -20,8 +20,48 @@ def get_input_duplicator():
     global duplicator_input
     duplicator_input = input_duplicator.get()
     input_duplicator.delete("0", "end")
-    print('in funktion', duplicator_input)
+    # print('in funktion', duplicator_input)
     var_2.set(1)
+
+
+def corresponds_to_defintion(state_1_, state_2_):
+    # erstmal checken, ob die Zustände beide NH haben
+    with_nh, without_nh = alg.get_list_with_without_neighbourhoods(uc_dict, all_states)
+    if state_1_ in with_nh and state_2_ in without_nh:
+        # todo wird nicht angezeigt
+        return 'spoiler won'
+    if (state_1_ in without_nh and state_2_ in with_nh) or (state_1_ in without_nh and state_2_ in without_nh):
+        return 'duplicator won'
+    if state_1_ in with_nh and state_2_ in with_nh:
+        return True
+
+
+def pick_new_state(bool):
+    instruction_label.config(text="Spoiler bitte neuen Zustand wählen")
+    while True:
+        input_confirm_button_1.wait_variable(var_1)
+        state_1_ = spoiler_input
+        if state_1_ not in all_states:
+            instruction_label.config(text="Ungültiger Zustand, nochmal Zustand wählen Spieler 1")
+            continue
+        else:
+            break
+    instruction_label.config(text="Duplicator bitte neuen Zustand wählen")
+    while True:
+        input_confirm_button_2.wait_variable(var_2)
+        state_2_ = duplicator_input
+        if state_2_ not in all_states:
+            instruction_label.config(text="Ungültiger Zustand, nochmal Zustand wählen Duplicator")
+            continue
+        else:
+            break
+    bool = False
+    return state_1_, state_2_
+    # das geht nicht nochmal :global state_1, state_2
+
+
+def close_window():
+    root.destroy()
 
 
 # Spiel
@@ -36,6 +76,7 @@ input_spoiler = ttk.Entry(root)
 label_input_player_2 = ttk.Label(root, text='Eingabe Duplicator')
 input_duplicator = ttk.Entry(root)
 instruction_label = ttk.Label(root, text='Hier werden gleich Anweisungen stehen')
+score_label = ttk.Label(root, text='Hier wird angezeigt, ob was bisimualar ist')
 
 input_confirm_button_1 = ttk.Button(root, text='Okay!', command=get_input_spoiler)
 input_confirm_button_2 = ttk.Button(root, text='Okay!', command=get_input_duplicator)
@@ -48,6 +89,7 @@ label_input_player_2.grid(row=4, column=1, pady=20, padx=20, sticky='E')
 input_spoiler.grid(row=5, column=0, padx=20, sticky='W')
 input_duplicator.grid(row=5, column=1, padx=20, sticky='E')
 instruction_label.grid(row=7, padx=20, sticky='EW')
+score_label.grid(row=10, padx=20, sticky='EW')
 
 input_confirm_button_1.grid(row=8, column=0, pady=20, padx=20, sticky='W')
 input_confirm_button_2.grid(row=8, column=1, pady=20, padx=20, sticky='E')
@@ -63,41 +105,58 @@ list_with_recently_picked_states = []
 
 # todo auch Nh aus uc zulassen
 # spiel endet, wenn duplicator nicht mit bisimularen zustand antworten kann oder Spieler 1 keinen zug machen kann
-#
-while all_states != list_with_recently_picked_states:
-    instruction_label.config(text="Spoiler bitte Zustand wählen")
-    while True:
-        input_confirm_button_1.wait_variable(var_1)
-        state_1 = spoiler_input
-        if state_1 not in all_states:
-            print('hello')
-            instruction_label.config(text="Ungültiger Zustand, nochmal Zustand wählen Spieler 1")
-            continue
-        else:
-            break
-    instruction_label.config(text="Duplicator bitte Zustand wählen")
-    while True:
-        input_confirm_button_2.wait_variable(var_2)
-        state_2 = duplicator_input
-        if state_2 not in all_states:
-            instruction_label.config(text="Ungültiger Zustand, nochmal Zustand wählen Duplicator")
-            continue
-        else:
-            break
-    list_with_recently_picked_states.append(state_1)
+
+# while all_states != list_with_recently_picked_states:
+instruction_label.config(text="Spoiler bitte Zustand wählen")
+while True:
+    input_confirm_button_1.wait_variable(var_1)
+    state_1 = spoiler_input
+    if state_1 not in all_states:
+        instruction_label.config(text="Ungültiger Zustand, nochmal Zustand wählen Spieler 1")
+        continue
+    else:
+        break
+instruction_label.config(text="Duplicator bitte Zustand wählen")
+while True:
+    input_confirm_button_2.wait_variable(var_2)
+    state_2 = duplicator_input
+    if state_2 not in all_states:
+        instruction_label.config(text="Ungültiger Zustand, nochmal Zustand wählen Duplicator")
+        continue
+    else:
+        break
+list_with_recently_picked_states.append(state_1)
     # erstmal checken, ob die Zustände beide NH haben
+
+states_need_to_be_picked_again = False
+while all_states != list_with_recently_picked_states:
+    if states_need_to_be_picked_again:
+        print('bin hier')
+        # todo wird nicht angezeigt
+        # score_label.config(text="Ja, die waren bisimular")
+        # instruction_label.config(text="bin jetzt hier drin")
+        root.update_idletasks()
+        pick_new_state(states_need_to_be_picked_again)
+        state_1, state_2 = pick_new_state(states_need_to_be_picked_again)
     with_nh, without_nh = alg.get_list_with_without_neighbourhoods(uc_dict, all_states)
-    if state_1 in with_nh and state_2 in without_nh:
-        instruction_label.config(text="Nicht bisimular, Spoiler hat gewonnen")
-        break
-    if state_1 in without_nh and state_2 in with_nh:
-        instruction_label.config(text="Ja, die sind bisimular, Duplicator hat gewonnen")
-        break
+    # mache es glaube ich ohne funktion
+    # corresponds_to_defintion(state_1, state_2)
     if state_1 in without_nh and state_2 in without_nh:
-        instruction_label.config(text="Ja, die sind bisimular, Duplicator hat gewonnen")
+        # todo hier wird jetzt auch abgebrochen ohne das label zu zeigen
+        # todo außerdem müssen hier jetzt wieder ganz neue Zustände gewählt werden, hier könnte die Funktion aufgerufen werden, vielleicht ne flag setzten um zu sehen, dass es nötig ist
+        # todo hier könnte dann noch das aktuelle paar und die anderen als historie angeuzeigt werden in einer box oder so
+        # text_var = tk.StringVar
+        score_label.config(text="Ja, die sind bisimular, Duplicator hat für das Paar x y gewonnen")
+        # flag auf true setzen
+        states_need_to_be_picked_again = True
+        continue
+    if (state_1 in with_nh and state_2 in without_nh) or (state_1 in without_nh and state_2 in with_nh):
+        score_label.config(text="Nicht bisimular, Spoiler hat gewonnen")
+        # break ist hier richtig - nicht wegmachen
         break
-    # todo bis hier das könnte besser in extra funktion
+
     if state_1 in with_nh and state_2 in with_nh:
+    # if corresponds_to_defintion(state_1, state_2, instruction_label):
         instruction_label.config(text="jetzt NH wählen Spieler 1")
         while True:
             input_confirm_button_1.wait_variable(var_1)
@@ -123,12 +182,11 @@ while all_states != list_with_recently_picked_states:
             nh_2__ = duplicator_input
             nh_2_ = nh_2__.lstrip().split(', ')
             nh_2 = nh_2_[0]
-            print(nh_2_)
+            # print(nh_2_)
             # hier muss wahrscheinlich der input noch angepasst werden, vielleicht mit list()
             if nh_2_ not in uc_dict.get(state_2):
                 instruction_label.config(text="Das ist kein NH des gewählten Zustandes")
-                # print('Das ist kein NH des gewählten Zustandes')
-                continue # hier wird nur die for-Schleife beendet bis jetzt
+                continue
             else:
                 break
         # jetz muss Spieler 1 in den Nh von Spieler 2 wechseln
@@ -157,18 +215,33 @@ while all_states != list_with_recently_picked_states:
                 continue
             else:
                 break
-        # todo hier muss nur geschaut werden, ob wieder beide NH usw.
-        # todo wird nicht als tupel erkannt
+        print('oder hier')
+    print('hey')
+    state_1 = state_in_NH_1
+    print('state1 neu gesetzt', state_1)
+    list_with_recently_picked_states.append(state_1)
+    state_2 = state_in_NH_2
+    continue
 
-        if (state_in_NH_1, state_in_NH_2) in bisimulation:
-            print('hey')
-            instruction_label.config(text="Ja, die sind bisimular, das Spiel geht weiter")
-            if list_with_recently_picked_states == all_states:
-                instruction_label.config(text="Spieler 2 kann alle Zustände matchen und hat gewonnen")
-                break
-            else:
-                continue
-        else:
-            instruction_label.config(text="Nicht bisimular, Spieler 1 hat gewonnen")
-            # hier kann dann abgebrochen werden
-            break
+
+
+
+        # todo hier muss nur geschaut werden, ob wieder beide NH usw.
+
+        # if (state_in_NH_1, state_in_NH_2) in bisimulation:
+        #     print('hey')
+        #     # todo wird nicht geändert
+        #     instruction_label.config(text="Ja, die sind bisimular, das Spiel geht weiter")
+        #     # bringt nichts
+        #     # sleep(5)
+        #     if list_with_recently_picked_states == all_states:
+        #         instruction_label.config(text="Spieler 2 kann alle Zustände matchen und hat gewonnen")
+        #         break
+        #     else:
+        #         # todo hier könnte man einfach state_in_nH1 und 2 auf state 1 und 2 setzen und continue ab dem punkt
+        #         continue
+        # else:
+        #     instruction_label.config(text="Nicht bisimular, Spieler 1 hat gewonnen")
+        #     break
+
+root.mainloop()

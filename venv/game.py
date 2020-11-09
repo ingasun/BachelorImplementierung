@@ -1,15 +1,5 @@
 import algorithm as alg
 
-# inp_ = str(input('gib was ein'))
-# print(inp_)
-#
-#
-# def func(inp):
-#     list_ = ['u1', 'v1', 'bla']
-#     print(inp in list_)
-#
-#
-# func(inp_)
 
 # todo es muss noch ausgeschlossen werden, dass Spieler 2 aus demselben NHF wählt
 # todo es müssen alle upper closures als NH gewählt werden können
