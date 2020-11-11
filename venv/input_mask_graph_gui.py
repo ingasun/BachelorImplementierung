@@ -2,7 +2,7 @@
 import calculate_uc_dynamically as ucd
 import process_input as pi
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, messagebox
 # import random
 # from PIL import ImageTk, Image
 # import numpy as np
@@ -102,8 +102,17 @@ def store_all_upper_closures_2():
 #     return list_with_all_uc_input
 def get_values_to_create_boxes():
     global sys_1, sys_2
-    sys_1 = input_entries_1.get()
-    sys_2 = input_entries_2.get()
+    try:
+        sys_1_ = int(input_entries_1.get())
+        sys_2_ = int(input_entries_2.get())
+    except ValueError:
+        messagebox.showerror('Fehler', 'Bitte nur Ganzzahlen eingeben')
+    else:
+        sys_1 = int(input_entries_1.get())
+        sys_2 = int(input_entries_2.get())
+
+
+# Input was integers, continue as normal
 
 
 def close_window():
@@ -165,7 +174,10 @@ v3 = StringVar(frame_1, value="{}")
 # eingabefelder für graph 1
 input_states_text = Label(frame_1, text='Zustände für Graph 1 angeben, bitte mit Leerzeichen trennen', padx=20, pady=10)
 input_states = Entry(frame_1, borderwidth=5, textvariable=default_state_string)
-input_uc_text = Label(frame_1, text='Zustände mit upper closures angeben, Eingabe soll so aussehen: s1: s1, t1; u1, v1', pady=10)
+input_uc_text = Label(frame_1, text='Zustände mit upper closures angeben', padx=20, pady=10)
+input_description = Label(frame_1, text='Dazu Zustand mit Doppelpunkt von seiner upper closure trennen', padx=20, pady=10)
+input_description_line_2 = Label(frame_1, text='Mehrere upper closures mit Semicolon voneinander trennen', padx=20, pady=10)
+input_example = Label(frame_1, text='z.B s1: s1, t1; u1, v1', padx=20, pady=10)
 
 label_uc = Label(frame_1, text='Zustand mit seiner Upward Closure', pady=20)
 for x in range(3, (int(number_of_states_with_uc_1) + 3)):
@@ -176,7 +188,10 @@ for x in range(3, (int(number_of_states_with_uc_1) + 3)):
 
 input_states_text.grid(row=0, column=0)
 input_states.grid(row=0, column=1)
-input_uc_text.grid(row=3, column=0, sticky='ew')
+input_uc_text.grid(row=3, column=0, sticky='w')
+input_description.grid(row=4, column=0, sticky='w')
+input_description_line_2.grid(row=5, column=0, sticky='w')
+input_example.grid(row=6, column=0, sticky='w')
 label_uc.grid(row=2, column=1)
 
 input_confirm_button = Button(frame_1, text='Eingabe bestätigen', command=lambda: store_all_upper_closures())
@@ -187,7 +202,7 @@ input_confirm_button.grid(row=20, pady=20)
 default_state_string_2 = StringVar(frame_2, value="s2 t2")
 v2 = StringVar(frame_1, value="s2: t2, t1")
 
-# eingabefelder für graph 1
+# eingabefelder für graph 2
 input_states_text_2 = Label(frame_2, text='Zustände für Graph 2 angeben, bitte mit Leerzeichen trennen', padx=20, pady=10)
 input_states_2 = Entry(frame_2, borderwidth=5, textvariable=default_state_string_2)
 input_uc_text_2 = Label(frame_2, text='Zustände mit upper closures angeben, Eingabe soll so aussehen: s1: s1, t1; u1, v1', pady=10)
@@ -296,18 +311,10 @@ root = Tk()
 root.title('Spiel')
 root.geometry('900x900')
 
-content = ttk.Frame(root, padding=(3,3,12,12))
-frame = ttk.Frame(content, borderwidth=5, relief="sunken", width=150, height=100)
-namelbl = ttk.Label(content, text="Name")
-name = ttk.Entry(content)
+# content = ttk.Frame(root, padding=(3,3,12,12))
+frame = ttk.Frame(root, borderwidth=5, relief="sunken", width=150, height=100)
 
-onevar = BooleanVar()
-twovar = BooleanVar()
-threevar = BooleanVar()
 
-onevar.set(True)
-twovar.set(False)
-threevar.set(True)
 
 #frame sachen
 title = ttk.Label(frame, text='Bisimulation Game for NHF')
@@ -325,22 +332,15 @@ input_confirm_button_2 = ttk.Button(frame, text='Okay!')
 exit_game_button = ttk.Button(frame, text='Exit Game')
 
 # content Sachen
-one = ttk.Checkbutton(content, text="One", variable=onevar, onvalue=True)
-two = ttk.Checkbutton(content, text="Two", variable=twovar, onvalue=True)
-three = ttk.Checkbutton(content, text="Three", variable=threevar, onvalue=True)
-ok = ttk.Button(content, text="Okay")
-cancel = ttk.Button(content, text="Cancel")
+# one = ttk.Checkbutton(content, text="One", variable=onevar, onvalue=True)
+# two = ttk.Checkbutton(content, text="Two", variable=twovar, onvalue=True)
+# three = ttk.Checkbutton(content, text="Three", variable=threevar, onvalue=True)
+# ok = ttk.Button(content, text="Okay")
+# cancel = ttk.Button(content, text="Cancel")
 
 
-content.grid(column=0, row=0, columnspan=3, rowspan= 2, sticky=(N, S, E, W))
+
 frame.grid(column=0, row=0, columnspan=3, rowspan=2, sticky=(N, S, E, W))
-namelbl.grid(column=3, row=0, columnspan=2, sticky=(N, W), padx=5)
-name.grid(column=3, row=1, columnspan=2, sticky=(N, E, W), pady=5, padx=5)
-one.grid(column=0, row=3)
-two.grid(column=1, row=3)
-three.grid(column=2, row=3)
-ok.grid(column=3, row=3)
-cancel.grid(column=4, row=3)
 title.grid(row=0, padx=20, pady=20)
 chose_player_label.grid(row=1, column=0, padx=20, pady=20, sticky='W')
 player_chose_duplicator.grid(row=2, column=0, padx=20, sticky='W')
@@ -358,12 +358,12 @@ exit_game_button.grid(row=8, pady=20, padx=20, sticky='NEWS')
 
 root.columnconfigure(0, weight=2)
 root.rowconfigure(0, weight=2)
-content.columnconfigure(0, weight=3)
-content.columnconfigure(1, weight=3)
-content.columnconfigure(2, weight=3)
-content.columnconfigure(3, weight=3)
-content.columnconfigure(4, weight=3)
-content.rowconfigure(1, weight=1)
+# content.columnconfigure(0, weight=3)
+# content.columnconfigure(1, weight=3)
+# content.columnconfigure(2, weight=3)
+# content.columnconfigure(3, weight=3)
+# content.columnconfigure(4, weight=3)
+# content.rowconfigure(1, weight=1)
 # state_list = ['s', 't', 'u', 'v']
 # label_list_states = ['s', 't', 'u', 'v']
 # label_node_state = dict(zip(state_list, label_list_states))
