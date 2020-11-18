@@ -31,7 +31,7 @@
 #
 list_ = ['s1: s1; u1, v1', 't1: t1; u1']
 
-inp = ['s1: s1, t1; u1, v1']
+inp = ['s1: s1, t1; u1, v1', 's2: t2']
 
 
 def process_input(input_list_from_all_entry_boxes):
@@ -50,7 +50,7 @@ def process_input(input_list_from_all_entry_boxes):
         for val in item[0]:
             uc_dictionary[val] = item[1]
 
-    return list_with_processed_input  # ,uc_dictionary
+    return list_with_processed_input #, uc_dictionary
 
 
 print(process_input(inp))

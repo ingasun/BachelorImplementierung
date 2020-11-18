@@ -64,7 +64,7 @@ def store_all_upper_closures():
     for entry in list_with_all_uc_entries:
         list_with_uc_content.append(entry.get())
     print(list_with_uc_content)
-    list_with_all_uc_stuff = pi.process_input(list_with_uc_content)
+    list_with_all_uc_stuff, uc_dict = pi.process_input(list_with_uc_content)
 
 
 list_with_all_uc_entries_2 = []
@@ -81,7 +81,7 @@ def store_all_upper_closures_2():
     for entry in list_with_all_uc_entries_2:
         list_with_uc_content_2.append(entry.get())
     print(list_with_uc_content_2)
-    list_with_all_uc_stuff_2 = pi.process_input(list_with_uc_content_2)
+    list_with_all_uc_stuff_2, uc_dict_2 = pi.process_input(list_with_uc_content_2)
 
 
 # def store_all_upper_closures():
@@ -304,6 +304,10 @@ print(intermediate_node_list_2, edgelist_main_states_2, label_intermediate_state
 # print('zwischenzustände', intermediate_node_list)
 # print('label', label_intermediate_states)
 # print('edged from intermediate', edges_from_intermediate_states)
+# todo hier jetzt noch die sachen für spiel dynamisch erzeugen
+# dictionarys müssen gemerged werden
+merged_dict = uc_dict.update(dict2)
+# und statelsits
 
 # ok, jetzt hab ich die Graphsachen und kann mit dem nächsten Fenster weitermachen
 # mal sehen wie ich die Daten da erstmal rein kriege

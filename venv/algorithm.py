@@ -16,8 +16,12 @@ uc_dictionary = {}
 for item in all_closures:
     for val in item[0]:
         uc_dictionary[val] = item[1]
-# print(uc_dictionary)
+print(uc_dictionary)
 # print(all_closures)
+
+
+def get_uc_dict_and_list_of_states(states_1, states_2, list_with_processed_input):
+    pass
 
 
 def list_powerset(lst):

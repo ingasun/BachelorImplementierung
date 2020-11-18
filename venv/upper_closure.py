@@ -60,7 +60,7 @@ def get_upper_closure_for_states(state_list, sublist_with_state_upper_closures):
     # input_upper_closure_ = input(f'Welche upper closure hat der Zustand {state_}? Bitte mehrere mit Leerzeichen trennen ')
     # input_upper_closure = input_upper_closure_.split(' ')
     final_input_list_upper_closure = [list(item) for item in input_upper_closure]
-    print(final_input_list_upper_closure)
+    # print(final_input_list_upper_closure)
 
     # jetzt die upper closure berechnen
     powerset_ = list_powerset(state_list)
@@ -82,17 +82,17 @@ def get_upper_closure_for_states(state_list, sublist_with_state_upper_closures):
         if len(input_) == 0:
             break
 
-    print('liste mit duplicaten')
-    print(upper_closure_list_with_duplicates)
-    print('das ist die upper closure liste')
+    # print('liste mit duplicaten')
+    # print(upper_closure_list_with_duplicates)
+    # print('das ist die upper closure liste')
     # jetzt als set um duplicate zu eliminieren
     set_of_tuples = set(tuple(x) for x in upper_closure_list_with_duplicates)
     # jetzt wieder als Liste
     final_upper_closure_list = list(set_of_tuples)
-    print(final_upper_closure_list)
+    # print(final_upper_closure_list)
     edge_list_of_a_state = [(state_, e) for e in final_upper_closure_list]
-    print('das ist die edgelist')
-    print(edge_list_of_a_state)
+    # print('das ist die edgelist')
+    # print(edge_list_of_a_state)
 
     #jetzt die Label auch hier rein
     label_list = []

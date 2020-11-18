@@ -185,6 +185,9 @@ print(intermediate_node_list_2, edgelist_main_states_2, label_intermediate_state
 # print('label', label_intermediate_states)
 # print('edged from intermediate', edges_from_intermediate_states)
 # todo ich brauche noch das dictionary mit zuständen und deren ucs für das Spiel
+# todo hier jetzt noch die sachen für spiel dynamisch erzeugen
+# dictionarys müssen gemerged werden
+# merged_dict = uc_dict.update(uc_dict_2)
 # ok, jetzt hab ich die Graphsachen und kann mit dem nächsten Fenster weitermachen
 
 def get_input_spoiler():
