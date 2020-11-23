@@ -19,15 +19,22 @@ list_with_all_uc_entries = []
 def store_all_upper_closures():
     global list_with_all_uc_stuff
     global state_list
+    global uc_dict
+    global nh_state_list
     state_list = input_states.get().split(' ')
-    print(state_list)
-    print(len(state_list))
+    # print(state_list)
+    # print(len(state_list))
 
     list_with_uc_content = []
+    # print('was ist in der liste?', list_with_all_uc_entries)
     for entry in list_with_all_uc_entries:
-        list_with_uc_content.append(entry.get())
-    print(list_with_uc_content)
-    list_with_all_uc_stuff = pi.process_input(list_with_uc_content)
+        if entry.get() is '':
+            return messagebox.showwarning('Warnung', 'Die Eingabe darf nicht leer sein')
+        else:
+            list_with_uc_content.append(entry.get())
+            list_with_all_uc_stuff, uc_dict, nh_state_list = pi.process_input(list_with_uc_content)
+    # print(list_with_uc_content)
+
 
 
 list_with_all_uc_entries_2 = []
@@ -36,15 +43,21 @@ list_with_all_uc_entries_2 = []
 def store_all_upper_closures_2():
     global list_with_all_uc_stuff_2
     global state_list_2
-    state_list_2 = input_states_2.get().split(' ')
-    print(state_list_2)
-    print(len(state_list_2))
-
+    global uc_dict_2
+    global nh_state_list_2
+    try:
+        state_list_2 = input_states_2.get().split(' ')
+    except Exception:
+        messagebox.showerror('fehlerhafte Eingabe!')
+    else:
+        state_list_2 = input_states_2.get().split(' ')
     list_with_uc_content_2 = []
     for entry in list_with_all_uc_entries_2:
-        list_with_uc_content_2.append(entry.get())
-    print(list_with_uc_content_2)
-    list_with_all_uc_stuff_2 = pi.process_input(list_with_uc_content_2)
+        if entry.get() is '':
+            return messagebox.showwarning('Warnung', 'Die Eingabe darf nicht leer sein')
+        else:
+            list_with_uc_content_2.append(entry.get())
+            list_with_all_uc_stuff_2, uc_dict_2, nh_state_list_2 = pi.process_input(list_with_uc_content_2)
 
 def get_values_to_create_boxes():
     global sys_1, sys_2
@@ -176,19 +189,16 @@ root.mainloop()
 # hier jetzt die gesamtlisten der edges und nodes erstellen
 
 intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state = ucd.get_all_graph_stuff_for_system(state_list, list_with_all_uc_stuff) # vorher uc_input...
-print(intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state)
+# print(intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state)
+final_intermediate_list = [(e) for e in intermediate_node_list if e not in nh_state_list]
 # hier wird noch mal die Funktion für den zweiten NHF aufrufen
 intermediate_node_list_2, edgelist_main_states_2, label_intermediate_states_2, label_node_main_state_2 = ucd.get_all_graph_stuff_for_system(state_list_2, list_with_all_uc_stuff_2) # vorher uc_input...
-print(intermediate_node_list_2, edgelist_main_states_2, label_intermediate_states_2, label_node_main_state_2)
-# print('edgelist fertig', edgelist_main_states)
-# print('zwischenzustände', intermediate_node_list)
-# print('label', label_intermediate_states)
-# print('edged from intermediate', edges_from_intermediate_states)
-# todo ich brauche noch das dictionary mit zuständen und deren ucs für das Spiel
-# todo hier jetzt noch die sachen für spiel dynamisch erzeugen
-# dictionarys müssen gemerged werden
-# merged_dict = uc_dict.update(uc_dict_2)
-# ok, jetzt hab ich die Graphsachen und kann mit dem nächsten Fenster weitermachen
+# print(intermediate_node_list_2, edgelist_main_states_2, label_intermediate_states_2, label_node_main_state_2)
+final_intermediate_list_2 = [(e) for e in intermediate_node_list_2 if e not in nh_state_list_2]
+
+# neue andersfarbige Zustände machen:
+uc_dict.values()
+
 
 def get_input_spoiler():
     global spoiler_input
@@ -204,42 +214,6 @@ def get_input_duplicator():
     input_duplicator.delete("0", "end")
     # print('in funktion', duplicator_input)
     var_2.set(1)
-
-
-# die bauche ich gerade nicht
-def corresponds_to_defintion(state_1_, state_2_):
-    # erstmal checken, ob die Zustände beide NH haben
-    with_nh, without_nh = alg.get_list_with_without_neighbourhoods(uc_dict, all_states)
-    if state_1_ in with_nh and state_2_ in without_nh:
-        # todo wird nicht angezeigt
-        return 'spoiler won'
-    if (state_1_ in without_nh and state_2_ in with_nh) or (state_1_ in without_nh and state_2_ in without_nh):
-        return 'duplicator won'
-    if state_1_ in with_nh and state_2_ in with_nh:
-        return True
-
-
-def pick_new_state(bool):
-    instruction_label.config(text="Spoiler bitte neuen Zustand wählen")
-    while True:
-        input_confirm_button_1.wait_variable(var_1)
-        state_1_ = spoiler_input
-        if state_1_ not in all_states:
-            instruction_label.config(text="Ungültiger Zustand, nochmal Zustand wählen Spieler 1")
-            continue
-        else:
-            break
-    instruction_label.config(text="Duplicator bitte neuen Zustand wählen")
-    while True:
-        input_confirm_button_2.wait_variable(var_2)
-        state_2_ = duplicator_input
-        if state_2_ not in all_states:
-            instruction_label.config(text="Ungültiger Zustand, nochmal Zustand wählen Duplicator")
-            continue
-        else:
-            break
-    bool = False
-    return state_1_, state_2_
 
 
 def close_window():
@@ -267,7 +241,7 @@ smart_remarks_label = ttk.Label(frame, text='Hier wird angezeigt, ob unnötig ve
 
 input_confirm_button_1 = ttk.Button(frame, text='Okay!', command=get_input_spoiler)
 input_confirm_button_2 = ttk.Button(frame, text='Okay!', command=get_input_duplicator)
-exit_game_button = ttk.Button(frame, text='Exit Game')
+exit_game_button = ttk.Button(frame, text='Exit Game', command=close_window)
 
 frame.grid(column=0, row=0, columnspan=3, rowspan=2, sticky='S')
 label_input_player_1.grid(row=4, column=0, padx=20, sticky='W')
@@ -285,10 +259,11 @@ exit_game_button.grid(row=9, pady=20, padx=20, sticky='NEWS')
 G = nx.DiGraph()  # or DiGraph, MultiGraph, MultiDiGraph, etc
 
 
-
 G.add_nodes_from(state_list)
 G.add_edges_from(edgelist_main_states)
-G.add_nodes_from(intermediate_node_list)
+# todo es wäre cool wenn nodes aus den nh anders farbig wären
+G.add_nodes_from(final_intermediate_list)
+G.add_nodes_from(nh_state_list)
 
 # das layout muss nachdem alle Knoten und edges hinzugefügt wurden und bevor der graph gezeichnet wird gesetzt werden
 pos = nx.nx_agraph.graphviz_layout(G, prog='circo')
@@ -300,7 +275,8 @@ canvas = FigureCanvasTkAgg(f, root)
 # nx.draw_networkx_nodes(G, pos, nodelist=range(in_nodes), node_color='r', node_size=50, ax=ax),
 # nx.draw_networkx_nodes(G, pos, nodelist=range(in_nodes, in_nodes + out_nodes),
 nx.draw_networkx_nodes(G, pos=pos, nodelist=state_list, node_size=1000)
-nx.draw_networkx_nodes(G, pos=pos, nodelist=intermediate_node_list, node_size=25)
+nx.draw_networkx_nodes(G, pos=pos, nodelist=final_intermediate_list, node_size=25)
+nx.draw_networkx_nodes(G, pos=pos, nodelist=nh_state_list, node_color='pink', node_size=25)
 nx.draw_networkx_edges(G, pos=pos, edgelist=edgelist_main_states)
 # nx.draw_networkx_edges(G, pos=pos, edgelist=edged_from_intermediate)
 # raise text positions
@@ -308,8 +284,8 @@ nx.draw_networkx_edges(G, pos=pos, edgelist=edgelist_main_states)
 nx.draw_networkx_labels(G, pos=pos, labels=label_node_main_state, font_size=7, font_family='sans-serif')
 pos_attrs = {}
 for node, coords in pos.items():
-    pos_attrs[node] = (coords[0], coords[1] - 2)
-nx.draw_networkx_labels(G, pos=pos_attrs, labels=label_intermediate_states, font_size=7, font_family='sans-serif')
+    pos_attrs[node] = (coords[0], coords[1] - 5)
+nx.draw_networkx_labels(G, pos=pos_attrs, labels=label_intermediate_states, font_size=9, font_family='sans-serif')
 # nx.draw_networkx(G, with_label=True, node_color='green', pos=nx.spring_layout(G))
 
 # K3 Graph zeichnen
@@ -325,24 +301,26 @@ G_2 = nx.DiGraph()
 
 G_2.add_nodes_from(state_list_2)
 G_2.add_edges_from(edgelist_main_states_2)
-G_2.add_nodes_from(intermediate_node_list_2)
+G_2.add_nodes_from(final_intermediate_list_2)
+G_2.add_nodes_from(nh_state_list_2)
 
 # das layout muss nachdem alle Knoten und edges hinzugefügt wurden und bevor der graph gezeichnet wird gesetzt werden
-pos = nx.nx_agraph.graphviz_layout(G_2, prog='circo')
+pos = nx.nx_agraph.graphviz_layout(G_2, prog='dot')
 # pos = nx.kamada_kawai_layout(G)
 f_2 = plt.figure(figsize=(5, 5))
 canvas_2 = FigureCanvasTkAgg(f_2, root)
 
 
 nx.draw_networkx_nodes(G_2, pos=pos, nodelist=state_list_2, node_size=1000)
-nx.draw_networkx_nodes(G_2, pos=pos, nodelist=intermediate_node_list_2, node_size=25)
+nx.draw_networkx_nodes(G_2, pos=pos, nodelist=final_intermediate_list_2, node_size=25)
+nx.draw_networkx_nodes(G_2, pos=pos, nodelist=nh_state_list_2, node_color='pink', node_size=25)
 nx.draw_networkx_edges(G_2, pos=pos, edgelist=edgelist_main_states_2)
 
 nx.draw_networkx_labels(G_2, pos=pos, labels=label_node_main_state_2, font_size=7, font_family='sans-serif')
 pos_attrs = {}
 for node, coords in pos.items():
     pos_attrs[node] = (coords[0], coords[1] - 2)
-nx.draw_networkx_labels(G_2, pos=pos_attrs, labels=label_intermediate_states_2, font_size=7, font_family='sans-serif')
+nx.draw_networkx_labels(G_2, pos=pos_attrs, labels=label_intermediate_states_2, font_size=9, font_family='sans-serif')
 # nx.draw_networkx(G, with_label=True, node_color='green', pos=nx.spring_layout(G))
 
 # K3 Graph zeichnen
@@ -351,67 +329,84 @@ nx.draw_networkx_labels(G_2, pos=pos_attrs, labels=label_intermediate_states_2, 
 #plt.show()
 canvas_2.get_tk_widget().grid(column=1, row=10, sticky='s')
 
-# todo das muss noch dynamisch gemacht werden
-uc_dict = {'s1': [['t1'], ['u1', 'v1']], 'u1': [['u1']], 's2': [['t2']]}
-all_states = ['s1', 't1', 'u1', 'v1', 's2', 't2']
-bisimulation = alg.calculate_bisimulation(uc_dict, all_states)
+# uc_dict = {'s1': [['t1'], ['u1', 'v1']], 'u1': [['u1']], 's2': [['t2']]}
+# print(uc_dict)
+# print(uc_dict_2)
+print('werte aus uc_dict', uc_dict.values())
+# werte aus uc_dict dict_values([[['s1', 't1']]])
+uc_dict.update(uc_dict_2)
+# print(uc_dict)
+# print('merged', uc_dict)
+# print('alt', uc_dict)
+total_state_space = state_list + state_list_2
+# print('state_space', total_state_space)
+bisimulation = alg.calculate_bisimulation(uc_dict, total_state_space)
 
-print(bisimulation)
-list_with_recently_picked_states = []
-
-
-# todo auch Nh aus uc zulassen
-# spiel endet, wenn duplicator nicht mit bisimularen zustand antworten kann oder Spieler 1 keinen zug machen kann
-
-# while all_states != list_with_recently_picked_states:
-instruction_label.config(text="Spoiler bitte Zustand wählen")
+# print(bisimulation)
+instruction_label.config(text="Spoiler: lege zunächst Zustände fest, auf dem gespielt werden soll.")
 while True:
     input_confirm_button_1.wait_variable(var_1)
+    initial_tuple = spoiler_input.split(', ')
+    # print('Länge', len(initial_tuple))
+    if len(initial_tuple) != 2:
+        instruction_label.config(text="Es müssen genau 2 initiale Zustände angegeben werden, bitte diese mit Komma trennen")
+        continue
+    if (initial_tuple[0] in total_state_space) and (initial_tuple[1] in total_state_space):
+        break
+    else:
+        continue
+
+instruction_label.config(text="Spoiler bitte Zustand aus Starttupel wählen")
+while True:
+    input_confirm_button_2["state"] = "disabled"
+    input_confirm_button_1.wait_variable(var_1)
     state_1 = spoiler_input
-    if state_1 not in all_states:
+    if state_1 not in total_state_space:
         instruction_label.config(text="Ungültiger Zustand, nochmal Zustand wählen Spieler 1")
         continue
     else:
         break
-instruction_label.config(text="Duplicator bitte Zustand wählen")
+# todo das erübrigt sich jetzt eigentlich, aber egal
+input_confirm_button_2["state"] = "enabled"
+instruction_label.config(text="Duplicator bitte Zustand aus Starttupel wählen")
 while True:
+    input_confirm_button_1["state"] = "disabled"
     input_confirm_button_2.wait_variable(var_2)
     state_2 = duplicator_input
-    if state_2 not in all_states:
+    if state_2 not in total_state_space:
         instruction_label.config(text="Ungültiger Zustand, nochmal Zustand wählen Duplicator")
         continue
     else:
         break
-list_with_recently_picked_states.append(state_1)
-    # erstmal checken, ob die Zustände beide NH haben
+input_confirm_button_1["state"] = "enabled"
 
-states_need_to_be_picked_again = False
-while all_states != list_with_recently_picked_states:
-    if states_need_to_be_picked_again:
-        print('bin hier')
-        # todo wird nicht angezeigt
-        # score_label.config(text="Ja, die waren bisimular")
-        # instruction_label.config(text="bin jetzt hier drin")
-        pick_new_state(states_need_to_be_picked_again)
-        state_1, state_2 = pick_new_state(states_need_to_be_picked_again)
-    with_nh, without_nh = alg.get_list_with_without_neighbourhoods(uc_dict, all_states)
+while True:
+    # if states_need_to_be_picked_again:
+    #     print('bin hier')
+    #     # score_label.config(text="Ja, die waren bisimular")
+    #     # instruction_label.config(text="bin jetzt hier drin")
+    #     pick_new_state(states_need_to_be_picked_again)
+    #     state_1, state_2 = pick_new_state(states_need_to_be_picked_again)
+    with_nh, without_nh = alg.get_list_with_without_neighbourhoods(uc_dict, total_state_space)
     # mache es glaube ich ohne funktion
     # corresponds_to_defintion(state_1, state_2)
     if state_1 in without_nh and state_2 in without_nh:
-        # todo hier könnte dann noch das aktuelle paar und die anderen als historie angezeigt werden in einer box oder so
         # text_var = tk.StringVar
+        input_confirm_button_1["state"] = "disabled"
+        input_confirm_button_2["state"] = "disabled"
         score_label.config(text="Ja, die sind bisimular, Duplicator hat für das Paar x y gewonnen")
         # flag auf true setzen
-        states_need_to_be_picked_again = True
-        continue
-    if (state_1 in with_nh and state_2 in without_nh) or (state_1 in without_nh and state_2 in with_nh):
+        # states_need_to_be_picked_again = True
+        # hier kann direkt abgebrochen werden, da Dublicator gewonnen hat
+        break
+    if state_1 in with_nh and state_2 in without_nh or (state_1 in without_nh and state_2 in with_nh):
         # print(state_in_NH_1, state_in_NH_2)
         input_confirm_button_1["state"] = "disabled"
         input_confirm_button_2["state"] = "disabled"
         score_label.config(text="Nicht bisimular, Spoiler hat gewonnen")
         # hier wird geprüft, ob Dublicator hätte gewinnen können
-        if (state_in_NH_1, state_in_NH_2) in bisimulation:
-            print('hey')
+        # hier brauche ich die initialen Zustände
+        if (initial_tuple[0], initial_tuple[1]) in bisimulation:
             smart_remarks_label.config(text='Die Zustände waren eigentlich bisimular!')
         # break ist hier richtig - nicht wegmachen
         break
@@ -425,13 +420,12 @@ while all_states != list_with_recently_picked_states:
     #     break
 
     if state_1 in with_nh and state_2 in with_nh:
-        instruction_label.config(text="jetzt NH Spoiler, sind mehrere Zustände darin, diese bitte mit Komma trennen")
+        instruction_label.config(text="jetzt NH wählen Spoiler, sind mehrere Zustände darin, diese bitte mit Komma trennen")
         while True:
             input_confirm_button_1.wait_variable(var_1)
             nh_1__ = spoiler_input
             nh_1_ = nh_1__.lstrip().split(', ')
             nh_1 = nh_1_[0]
-            print(nh_1_)
             if nh_1_ not in uc_dict.get(state_1):
                 instruction_label.config(text="Das ist kein NH des gewählten Zustandes, nochmal")
                 continue
@@ -453,7 +447,7 @@ while all_states != list_with_recently_picked_states:
             # print(nh_2_)
             # hier muss wahrscheinlich der input noch angepasst werden, vielleicht mit list()
             if nh_2_ not in uc_dict.get(state_2):
-                instruction_label.config(text="Das ist kein NH des gewählten Zustandes")
+                instruction_label.config(text="Das ist kein NH des gewählten Zustandes, nochmal")
                 continue
             else:
                 break
@@ -466,9 +460,8 @@ while all_states != list_with_recently_picked_states:
                 instruction_label.config(text="Der Zustand ist da nicht drin, nochmal ")
                 continue
             else:
-                list_with_recently_picked_states.append(state_in_NH_1)
                 break
-        instruction_label.config(text="Spieler 2: wähle Zustand aus NH von Spieler 1, der dazu bisimular ist ")
+        instruction_label.config(text="Spieler 2: wähle Zustand aus NH von Spoiler, der dazu bisimular ist ")
         while True:
             input_confirm_button_2.wait_variable(var_2)
             state_in_NH_2 = duplicator_input
@@ -479,7 +472,6 @@ while all_states != list_with_recently_picked_states:
                 break
     state_1 = state_in_NH_1
     # print('state1 neu gesetzt', state_1)
-    list_with_recently_picked_states.append(state_1)
     state_2 = state_in_NH_2
     continue
 

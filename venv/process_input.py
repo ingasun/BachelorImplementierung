@@ -31,7 +31,7 @@
 #
 list_ = ['s1: s1; u1, v1', 't1: t1; u1']
 
-inp = ['s1: s1, t1; u1, v1', 's2: t2']
+inp = ['s1: u1, v1; t1']
 
 
 def process_input(input_list_from_all_entry_boxes):
@@ -41,17 +41,39 @@ def process_input(input_list_from_all_entry_boxes):
         second_list = [(first_list[0]), first_list[1].split(';')]
         part_1 = [second_list[0]]
         part_2 = [[x.lstrip().split(', ')] for x in second_list[1]]
+        # print('part_2', part_2)
+        # print('unpacked', part_2[0])
+        # part_2_unpacked = part_2[0]
         res = [part_1, part_2]
+        # print('res', res)
         # res_list = [res]
         list_with_processed_input.append(res)
 
     uc_dictionary = {}
     for item in list_with_processed_input:
         for val in item[0]:
-            uc_dictionary[val] = item[1]
+            uc_el_list = []
+            for el in item[1]:
+                uc_el_list.append(el[0])
 
-    return list_with_processed_input #, uc_dictionary
+            uc_dictionary[val] = uc_el_list
 
+    # Zustände aus dict
+    uc_nh = uc_dictionary.values()
+    tuple_list_to_be_colored = []
+    for nhs in uc_nh:
+        for nh in nhs:
+            tuple_list_to_be_colored.append(tuple(nh))
 
-print(process_input(inp))
+    return list_with_processed_input, uc_dictionary, tuple_list_to_be_colored
 
+# so können 2 unabhängige tupel-listen erstellt werden
+# print(process_input(inp))
+# list_, dict_, tuple_list = process_input(inp)
+#
+# print(list_)
+# print(dict_)
+# print(tuple_list)
+# another_tuple_list = [('t1', 'u1', 'v1'), ('s1', 'u1', 'v1'), ('t1', 'v1'), ('s1', 't1', 'u1'), ('s1', 't1', 'v1'), ('t1', 'u1'), ('u1', 'v1'), ('t1',), ('s1', 't1', 'u1', 'v1'), ('s1', 't1')]
+# final_intermediate_list = [(e) for e in another_tuple_list if e not in tuple_list]
+# print(final_list)

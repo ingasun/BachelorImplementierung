@@ -9,9 +9,9 @@ def calculate_uc_for_single_uc_elements(state_list, uc):
     # positionen der Zustände in dictionary speichern:
     # position_list_dict = {state_list for state in range(len(state_list))}
     position_list = dict(enumerate(state_list))
-    print(position_list)
+    # print(position_list)
     position_list_dict = dict((v, k) for k, v in position_list.items())
-    print(position_list_dict)
+    # print(position_list_dict)
 
     # jetzt upper closure berechnen
 
@@ -42,7 +42,7 @@ def calculate_uc_for_single_uc_elements(state_list, uc):
     for position in positions_for_array:
         initialize_array[position] ^= 1
     # arr[idx] ^= 1
-    print('flipped', initialize_array)
+    # print('flipped', initialize_array)
 
     uc_list_bit = []
     # jetzt dieses array mit allen aus powerset verunden
@@ -50,7 +50,7 @@ def calculate_uc_for_single_uc_elements(state_list, uc):
         if ((array_ & initialize_array) == initialize_array).all():
             uc_list_bit.append(array_)
 
-    print('uc_list_bit', uc_list_bit)
+    # print('uc_list_bit', uc_list_bit)
 
     # liste für graph bilden
     # erstmal positionen ermitteln, die im array 1 sind
@@ -92,7 +92,7 @@ def get_complete_graph_stuff_for_a_state(state_list, sublist):
     uc_for_a_state = []
     state__ = sublist[0]
     state_ = state__[0]
-    print('sublist[1]', sublist[1])
+    # print('sublist[1]', sublist[1])
     for uc in sublist[1]:
         list_ = calculate_uc_for_single_uc_elements(state_list, uc)
         uc_for_a_state.append(list_)
@@ -106,7 +106,7 @@ def get_complete_graph_stuff_for_a_state(state_list, sublist):
     # jetzt wieder als Liste
     final_upper_closure_list = list(set_of_tuples)
     # das ist richtig
-    print('final upper closure', final_upper_closure_list)
+    # print('final upper closure', final_upper_closure_list)
     edge_list_of_a_state = [(state_, e) for e in final_upper_closure_list]
     # print('das ist die edgelist')
     # print(edge_list_of_a_state)
