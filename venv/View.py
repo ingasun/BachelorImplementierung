@@ -188,11 +188,11 @@ def main():
 
     # hier jetzt die gesamtlisten der edges und nodes erstellen
 
-    intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state = ucd.get_all_graph_stuff_for_system(state_list, list_with_all_uc_stuff) # vorher uc_input...
+    intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state, dict_to_chose = ucd.get_all_graph_stuff_for_system(state_list, list_with_all_uc_stuff) # vorher uc_input...
     # print(intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state)
     final_intermediate_list = [(e) for e in intermediate_node_list if e not in nh_state_list]
     # hier wird noch mal die Funktion für den zweiten NHF aufrufen
-    intermediate_node_list_2, edgelist_main_states_2, label_intermediate_states_2, label_node_main_state_2 = ucd.get_all_graph_stuff_for_system(state_list_2, list_with_all_uc_stuff_2) # vorher uc_input...
+    intermediate_node_list_2, edgelist_main_states_2, label_intermediate_states_2, label_node_main_state_2, dict_to_chose_2 = ucd.get_all_graph_stuff_for_system(state_list_2, list_with_all_uc_stuff_2) # vorher uc_input...
     # print(intermediate_node_list_2, edgelist_main_states_2, label_intermediate_states_2, label_node_main_state_2)
     final_intermediate_list_2 = [(e) for e in intermediate_node_list_2 if e not in nh_state_list_2]
 
@@ -261,7 +261,6 @@ def main():
 
     G.add_nodes_from(state_list)
     G.add_edges_from(edgelist_main_states)
-    # todo es wäre cool wenn nodes aus den nh anders farbig wären
     G.add_nodes_from(final_intermediate_list)
     G.add_nodes_from(nh_state_list)
 
@@ -332,9 +331,10 @@ def main():
     # uc_dict = {'s1': [['t1'], ['u1', 'v1']], 'u1': [['u1']], 's2': [['t2']]}
     # print(uc_dict)
     # print(uc_dict_2)
-    print('werte aus uc_dict', uc_dict.values())
+    # print('werte aus uc_dict', uc_dict.values())
     # werte aus uc_dict dict_values([[['s1', 't1']]])
     uc_dict.update(uc_dict_2)
+    dict_to_chose.update(dict_to_chose_2)
     # print(uc_dict)
     # print('merged', uc_dict)
     # print('alt', uc_dict)
@@ -352,7 +352,7 @@ def main():
             initial_tuple = spoiler_input.split(', ')
             # print('Länge', len(initial_tuple))
             if len(initial_tuple) != 2:
-                instruction_label.config(text="Es müssen genau 2 initiale Zustände angegeben werden, bitte diese mit Komma trennen")
+                instruction_label.config(text="Es müssen genau zwei initiale Zustände angegeben werden, bitte diese mit Komma trennen")
                 continue
             if (initial_tuple[0] in total_state_space) and (initial_tuple[1] in total_state_space):
                 break
@@ -371,13 +371,13 @@ def main():
                 break
         # todo das erübrigt sich jetzt eigentlich, aber egal
         input_confirm_button_2["state"] = "enabled"
-        instruction_label.config(text="Duplicator bitte Zustand aus Starttupel wählen")
+        instruction_label.config(text="Duplicator bitte den anderen Zustand aus Starttupel wählen")
         while True:
             input_confirm_button_1["state"] = "disabled"
             input_confirm_button_2.wait_variable(var_2)
             state_2 = duplicator_input
             if state_2 not in total_state_space:
-                instruction_label.config(text="Ungültiger Zustand, nochmal Zustand wählen Duplicator")
+                instruction_label.config(text="Ungültiger Zustand, nochmal einen Zustand wählen Duplicator")
                 continue
             else:
                 break
@@ -402,7 +402,7 @@ def main():
                 # states_need_to_be_picked_again = True
                 # hier kann direkt abgebrochen werden, da Dublicator gewonnen hat
                 break
-            if state_1 in with_nh and state_2 in without_nh or (state_1 in without_nh and state_2 in with_nh):
+            if state_1 in with_nh and state_2 in without_nh:  #  or (state_1 in without_nh and state_2 in with_nh):
                 # print(state_in_NH_1, state_in_NH_2)
                 input_confirm_button_1["state"] = "disabled"
                 input_confirm_button_2["state"] = "disabled"
@@ -414,13 +414,16 @@ def main():
                 # break ist hier richtig - nicht wegmachen
                 break
             # macht doch keinen Sinn, weil die einfach nicht bisimular sind
-            # if (state_1 in without_nh and state_2 in with_nh):
-            #     print(state_in_NH_1, state_in_NH_2)
-            #     score_label.config(text="Spoiler kann nicht mehr wählen, Dublicator hat gewonnen")
-            #     if (state_in_NH_1, state_in_NH_2) in bisimulation:
-            #         smart_remarks_label.config(text='Die Zustände waren eigentlich bisimular!')
-            #
-            #     break
+            if (state_1 in without_nh and state_2 in with_nh):
+                print(state_in_NH_1, state_in_NH_2)
+                # todo hier noch prüfen ob wirklich bisimular
+                score_label.config(text="der Spoiler kann nicht mehr wählen, Dublicator hat gewonnen")
+                if (initial_tuple[0], initial_tuple[1]) not in bisimulation:
+                    smart_remarks_label.config(text='Die Zustände waren eigentlich nicht bisimular!')
+                # if (state_in_NH_1, state_in_NH_2) in bisimulation:
+                #     smart_remarks_label.config(text='Die Zustände waren aber eigentlich nicht bisimular!')
+
+                break
 
             if state_1 in with_nh and state_2 in with_nh:
                 instruction_label.config(text="jetzt NH wählen Spoiler, sind mehrere Zustände darin, diese bitte mit Komma trennen")
@@ -428,8 +431,11 @@ def main():
                     input_confirm_button_1.wait_variable(var_1)
                     nh_1__ = spoiler_input
                     nh_1_ = nh_1__.lstrip().split(', ')
+                    print('so sieht ein element im Nh aus', nh_1_)
+
+                    print('final dict', dict_to_chose)
                     nh_1 = nh_1_[0]
-                    if nh_1_ not in uc_dict.get(state_1):
+                    if nh_1_ not in uc_dict.get(state_1) and nh_1_ not in dict_to_chose.get(state_1):
                         instruction_label.config(text="Das ist kein NH des gewählten Zustandes, nochmal")
                         continue
                     else:
@@ -449,7 +455,7 @@ def main():
                     nh_2 = nh_2_[0]
                     # print(nh_2_)
                     # hier muss wahrscheinlich der input noch angepasst werden, vielleicht mit list()
-                    if nh_2_ not in uc_dict.get(state_2):
+                    if nh_2_ not in uc_dict.get(state_2) and nh_2_ not in dict_to_chose.get(state_2):
                         instruction_label.config(text="Das ist kein NH des gewählten Zustandes, nochmal")
                         continue
                     else:

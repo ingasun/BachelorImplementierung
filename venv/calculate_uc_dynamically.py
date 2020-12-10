@@ -4,14 +4,14 @@ import numpy as np
 def calculate_uc_for_single_uc_elements(state_list, uc):
     k = len(state_list)
     bit_array = np.array([list(np.binary_repr(x, k)) for x in range(2 ** k)], dtype=int)
-    # print(bit_array)
+    #print(bit_array)
 
     # positionen der Zustände in dictionary speichern:
     # position_list_dict = {state_list for state in range(len(state_list))}
     position_list = dict(enumerate(state_list))
-    # print(position_list)
+    #print('position lsit',position_list)
     position_list_dict = dict((v, k) for k, v in position_list.items())
-    # print(position_list_dict)
+    #print('position_list_dict', position_list_dict)
 
     # jetzt upper closure berechnen
 
@@ -27,22 +27,22 @@ def calculate_uc_for_single_uc_elements(state_list, uc):
     # print('uc', uc)
     for item in uc:
         for element in item:
-            # print('item', item)
+            #print('item', item)
             for key in position_list_dict.keys():
                 if element == key:
                     positions_for_array.append(position_list_dict[key])
 
-    # print('pos', positions_for_array)
+    #print('pos', positions_for_array)
     # bitarray bilden, wo die zustände als bits gesetzt sind
     # erstmal initialisieren
     initialize_array = np.zeros(len(state_list), dtype=np.int)
-    # print('init', initialize_array)
+    #print('initiales array', initialize_array)
 
     # flip bit on certain index with xor
     for position in positions_for_array:
         initialize_array[position] ^= 1
     # arr[idx] ^= 1
-    # print('flipped', initialize_array)
+    #print('flipped', initialize_array)
 
     uc_list_bit = []
     # jetzt dieses array mit allen aus powerset verunden
@@ -50,7 +50,7 @@ def calculate_uc_for_single_uc_elements(state_list, uc):
         if ((array_ & initialize_array) == initialize_array).all():
             uc_list_bit.append(array_)
 
-    # print('uc_list_bit', uc_list_bit)
+    #print('mit and operation uc_list_bit', uc_list_bit)
 
     # liste für graph bilden
     # erstmal positionen ermitteln, die im array 1 sind
@@ -60,7 +60,7 @@ def calculate_uc_for_single_uc_elements(state_list, uc):
         # print(len(pos))
         uc_position_list.append(pos)
         # result = np. where(arr == 15)
-    # print('uc_position_list', uc_position_list)
+    #print('wieder ausgetauscht uc_position_list', uc_position_list)
 
     # ohne komisches komma
     position_list_without_comma = []
@@ -80,10 +80,14 @@ def calculate_uc_for_single_uc_elements(state_list, uc):
             tuple_for_graph.append(position_list.get(pos))
         list_for_graph.append(tuple(tuple_for_graph))
 
+    print('list for graph', list_for_graph)
+
     return list_for_graph
 
 
-#state_list = ['s1', 't1', 'u1', 'v1']
+state_list = ['s1', 't1', 'u1', 'v1']
+uc_ = [['s1', 't1']]
+calculate_uc_for_single_uc_elements(state_list, uc_)
 #sublist = [['s1'], [['s1'], ['s1', 't1']]]
 
 
@@ -105,6 +109,11 @@ def get_complete_graph_stuff_for_a_state(state_list, sublist):
     set_of_tuples = set(tuple(x) for x in flat_list)
     # jetzt wieder als Liste
     final_upper_closure_list = list(set_of_tuples)
+    list_i_need  = [list(x) for x in final_upper_closure_list]
+    # {'s1': [['t1'], ['u1', 'v1'], ['t1', 'u1', 'v1'], ['t1', 'v1'], ['t1', 'u1'], ['s1', 'u1', 'v1'], ['s1', 't1', 'v1'], ['s1', 't1', 'u1'], ['s1', 't1', 'u1', 'v1'], ['s1', 't1']]}
+    dict_i_need = {state_: list_i_need}
+    # print(dict_i_need)
+    # print('upper closure list of a state', state_, final_upper_closure_list)
     # das ist richtig
     # print('final upper closure', final_upper_closure_list)
     edge_list_of_a_state = [(state_, e) for e in final_upper_closure_list]
@@ -154,11 +163,11 @@ def get_complete_graph_stuff_for_a_state(state_list, sublist):
     # label_list_states = state_list
     # label_node_state = dict(zip(state_list, label_list_states))
 
-    return final_upper_closure_list, edge_list_of_a_state, label_node_dict  # edge_list_intermediate_states
+    return final_upper_closure_list, edge_list_of_a_state, label_node_dict, dict_i_need  # edge_list_intermediate_states
     # upperClosureList, edgelist = get_upper_closure_for_states(state_) Reihenfolge wichtig
 
 
-# print('complete graph stuff', get_complete_graph_stuff_for_a_state(state_list, sublist))
+#print('complete graph stuff for a state', get_complete_graph_stuff_for_a_state(state_list, sublist))
 
 list_with_all_input = [[['s1'], [[['s1', 't1']], [['u1', 'v1']]]]]
 # for item in list_with_all_input:
@@ -175,13 +184,14 @@ def get_all_graph_stuff_for_system(state_list, list_with_all_uc_input):
     label_intermediate_states = {}
     edges_from_intermediate_states = []
     all_upper_closures = list_with_all_uc_input
+    dic_to_chose_from = {}
 
     for sublist in all_upper_closures:
         # print(sublist)
         # return final_upper_closure_list, edge_list_of_a_state, label_node_dict, label_node_state
         # return final_upper_closure_list, edge_list_of_a_state, label_node_dict  # edge_list_intermediate_states
         # undynamisch intermediate_node_list_sub, edgelist_main_states_sub, label_intermediate_states_sub, edges_from_intermediate_states_sub = uc.get_upper_closure_for_states(state_list, sublist)
-        intermediate_node_list_sub, edgelist_main_states_sub, label_intermediate_states_sub = get_complete_graph_stuff_for_a_state(state_list, sublist)
+        intermediate_node_list_sub, edgelist_main_states_sub, label_intermediate_states_sub, dict_to_chose_according_definition = get_complete_graph_stuff_for_a_state(state_list, sublist)
         # intermediate_node_list.append(intermediate_node_list_sub)
         intermediate_node_list += intermediate_node_list_sub
         edgelist_main_states += edgelist_main_states_sub
@@ -190,8 +200,9 @@ def get_all_graph_stuff_for_system(state_list, list_with_all_uc_input):
         # edges_from_intermediate_states += edges_from_intermediate_states_sub
         label_list_states = state_list
         label_node_main_state = dict(zip(state_list, label_list_states))
-    return intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state
+        dic_to_chose_from.update(dict_to_chose_according_definition)
+    return intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state, dic_to_chose_from
 
 
 
-# eprint(get_all_graph_stuff_for_system(states, list_with_all_input))
+# print('so siet das aus', get_all_graph_stuff_for_system(states, list_with_all_input))

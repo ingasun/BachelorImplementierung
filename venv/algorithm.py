@@ -110,6 +110,7 @@ def calculate_new_relation(blocks_, an_relation):
             # und die, die beide eine haben eh drin bleiben
             if tuple_[0] in uc_dictionary.keys() and tuple_[1] in uc_dictionary.keys():
                 has_subset_tilde_1 = [] # um festzustellen ob ein Zustand sowas hat
+                # todo hier auch noch die überflüssigen untersuchen
                 # jetzt die uc mit for_Schleife durchgehen
                 for uc in uc_dictionary.get(tuple_[0]):
                     is_set_1 = []
@@ -229,6 +230,3 @@ def calculate_bisimulation(uc_dict, states):
 # print('without Nh', without_tuple_different_nh)
 
 # musterlösung = {(s1 , s2 ), (t1 , t2 ), (v1 , t2 )}
-# todo es sind auch paare aus demselben system drin und u1 wurde auch entfernt zuerst...
-# so_jetzt = [('t2', 't2'), ('t2', 't1'), ('t2', 'v1'), ('t1', 't2'), ('t1', 't1'), ('t1', 'v1'), ('v1', 't2'), ('v1', 't1'), ('v1', 'v1')]
-# so jetzt_ = [('t1', 't1'), ('t1', 't2'), ('t1', 'v1'), ('t2', 't1'), ('t2', 't2'), ('t2', 'v1'), ('s2', 's1'), ('s2', 's2'), ('s1', 's1'), ('s1', 's2'), ('u1', 'u1'), ('v1', 't1'), ('v1', 't2'), ('v1', 'v1')]
