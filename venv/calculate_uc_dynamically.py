@@ -80,7 +80,7 @@ def calculate_uc_for_single_uc_elements(state_list, uc):
             tuple_for_graph.append(position_list.get(pos))
         list_for_graph.append(tuple(tuple_for_graph))
 
-    print('list for graph', list_for_graph)
+    #print('list for graph', list_for_graph)
 
     return list_for_graph
 

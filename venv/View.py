@@ -80,19 +80,19 @@ def main():
 
     # Fenster zur Bestimmung wie viele entry boxes
     root = Tk()
-    root.title('Wieviele Zustände sind upward closed?')
+    root.title('Anzahl Zustände mit nichtleerem NH')
     root.geometry('400x400')
-    frame_1 = LabelFrame(root, text='Eingabe Graph 1', font=11, padx=130, pady=80)
-    frame_2 = LabelFrame(root, text='Eingabe Graph 2', font=11, padx=130, pady=80)
+    frame_1 = LabelFrame(root, text='Eingabe System 1', font=11, padx=130, pady=80)
+    frame_2 = LabelFrame(root, text='Eingabe System 2', font=11, padx=130, pady=80)
     frame_1.grid(row=0, sticky='ew')
     frame_2.grid(row=1, sticky='ew')
 
     num_1 = IntVar(frame_1, value=1)
     num_2 = IntVar(frame_2, value=1)
 
-    input_label_1 = Label(frame_1, text='Wieviele Zustände mit uc hat system 1?', padx=20, pady=10)
+    input_label_1 = Label(frame_1, text='Wieviele Zustände mit nichtleerem NH hat System 1?', padx=20, pady=10)
     input_entries_1 = Entry(frame_1, borderwidth=5, textvariable=num_1)
-    input_label_2 = Label(frame_2, text='Wieviele Zustände mit uc hat system 2', padx=20, pady=10)
+    input_label_2 = Label(frame_2, text='Wieviele Zustände mit nichtleerem NH hat System 2', padx=20, pady=10)
     input_entries_2 = Entry(frame_2, borderwidth=5, textvariable=num_2)
     input_confirm_button2 = Button(frame_2, text='Eingabe bestätigen', command=lambda: get_values_to_create_boxes())
     switch_to_next_window_button = Button(frame_2, text='Weiter zur nächsten Eingabe', command=close_window)
@@ -133,12 +133,12 @@ def main():
     # eingabefelder für graph 1
     input_states_text = Label(frame_1, text='Zustände für Graph 1 angeben, bitte mit Leerzeichen trennen', padx=20, pady=10)
     input_states = Entry(frame_1, borderwidth=5, textvariable=default_state_string)
-    input_uc_text = Label(frame_1, text='Zustände mit upper closures angeben', padx=20, pady=10)
-    input_description = Label(frame_1, text='Dazu Zustand mit Doppelpunkt von seiner upper closure trennen', padx=20, pady=10)
-    input_description_line_2 = Label(frame_1, text='Mehrere upper closures mit Semicolon voneinander trennen', padx=20, pady=10)
+    input_uc_text = Label(frame_1, text='Zustände mit Minimalelementen angeben', padx=20, pady=10)
+    input_description = Label(frame_1, text='Dazu Zustand mit Doppelpunkt von seinen Minimalelementen trennen', padx=20, pady=10)
+    input_description_line_2 = Label(frame_1, text='Mehrere Minimalelemente mit Semikolon voneinander trennen', padx=20, pady=10)
     input_example = Label(frame_1, text='z.B s1: s1, t1; u1, v1', padx=20, pady=10)
 
-    label_uc = Label(frame_1, text='Zustand mit seiner Upward Closure', pady=20)
+    label_uc = Label(frame_1, text='Zustand mit Minimalelementen', pady=20)
     for x in range(3, (int(number_of_states_with_uc_1) + 3)):
         uc_input = Entry(frame_1, borderwidth=5)  # , textvariable=v
         uc_input.grid(row=x, column=1, pady=5, padx=5)
@@ -159,14 +159,14 @@ def main():
     # Eingabefelder Graph2 neu
 
     default_state_string_2 = StringVar(frame_2, value="s2 t2")
-    v2 = StringVar(frame_1, value="s2: t2, t1")
+    v2 = StringVar(frame_1, value="s2: t2")
 
     # eingabefelder für graph 2
     input_states_text_2 = Label(frame_2, text='Zustände für Graph 2 angeben, bitte mit Leerzeichen trennen', padx=20, pady=10)
     input_states_2 = Entry(frame_2, borderwidth=5, textvariable=default_state_string_2)
-    input_uc_text_2 = Label(frame_2, text='Zustände mit upper closures angeben, Eingabe soll so aussehen: s1: s1, t1; u1, v1', pady=10)
+    input_uc_text_2 = Label(frame_2, text='Zustände mit jeweiligen Minimalelementen angeben, Eingabe soll z.B so aussehen: s1: s1, t1; u1, v1', pady=10)
 
-    label_uc_2 = Label(frame_2, text='Zustand mit seiner Upward Closure', pady=20)
+    label_uc_2 = Label(frame_2, text='Zustand mit Minimalelementen', pady=20)
     for x in range(3, (int(number_of_states_with_uc_2) + 3)):
         uc_input_ = Entry(frame_2, borderwidth=5, textvariable=v2)
         uc_input_.grid(row=x, column=1, pady=5, padx=5)
@@ -200,6 +200,13 @@ def main():
     uc_dict.values()
 
 
+    def get_input_initial_tuple():
+        global initial_tuple
+        initial_tuple = input_initial_tuple.get()
+        #input_spoiler.delete("0", "end")
+        # print('in funktion', spoiler_input)
+        var_1.set(1)
+
     def get_input_spoiler():
         global spoiler_input
         spoiler_input = input_spoiler.get()
@@ -231,30 +238,36 @@ def main():
     var_1 = IntVar()
     var_2 = IntVar()
 
-    label_input_player_1 = ttk.Label(frame, text='Eingabe Spoiler')
+    label_input_initial_tuple = ttk.Label(frame, text='Eingabe initiale Zustände')
+    label_input_player_1 = ttk.Label(frame, text='Eingabe Angreifer')
+    input_initial_tuple = ttk.Entry(frame)
     input_spoiler = ttk.Entry(frame)
-    label_input_player_2 = ttk.Label(frame, text='Eingabe Duplicator')
+    label_input_player_2 = ttk.Label(frame, text='Eingabe Verteidiger')
     input_duplicator = ttk.Entry(frame)
     instruction_label = ttk.Label(frame, text='Hier werden gleich Anweisungen stehen')
     score_label = ttk.Label(frame, text='Hier wird angezeigt, ob was bisimular ist')
     smart_remarks_label = ttk.Label(frame, text='Hier wird angezeigt, ob unnötig verloren, bzw schlecht gespielt')
 
+    input_initial_tuple_confirm = ttk.Button(frame, text='Okay!', command=get_input_initial_tuple)
     input_confirm_button_1 = ttk.Button(frame, text='Okay!', command=get_input_spoiler)
     input_confirm_button_2 = ttk.Button(frame, text='Okay!', command=get_input_duplicator)
     exit_game_button = ttk.Button(frame, text='Exit Game', command=close_window)
 
     frame.grid(column=0, row=0, columnspan=3, rowspan=2, sticky='S')
-    label_input_player_1.grid(row=4, column=0, padx=20, sticky='W')
-    label_input_player_2.grid(row=4, column=1, pady=20, padx=20, sticky='E')
-    input_spoiler.grid(row=5, column=0, padx=20, sticky='W')
-    input_duplicator.grid(row=5, column=1, padx=20, sticky='E')
-    instruction_label.grid(row=7, padx=20, sticky='EW')
-    score_label.grid(row=10, padx=20, sticky='EW')
-    smart_remarks_label.grid(row=11, padx=20, sticky='EW')
+    label_input_initial_tuple.grid(row=2, column=0, padx=20, pady=20, sticky='E')
+    input_initial_tuple.grid(row=3, column=0, padx=20, sticky='EW')
+    label_input_player_1.grid(row=5, column=0, padx=20, sticky='W')
+    label_input_player_2.grid(row=5, column=1, pady=20, padx=20, sticky='E')
+    input_spoiler.grid(row=6, column=0, padx=20, sticky='W')
+    input_duplicator.grid(row=6, column=1, padx=20, sticky='E')
+    instruction_label.grid(row=8, padx=20, sticky='EW')
+    score_label.grid(row=11, padx=20, sticky='EW')
+    smart_remarks_label.grid(row=12, padx=20, pady=50, sticky='EW')
 
-    input_confirm_button_1.grid(row=8, column=0, pady=20, padx=20, sticky='W')
-    input_confirm_button_2.grid(row=8, column=1, pady=20, padx=20, sticky='E')
-    exit_game_button.grid(row=9, pady=20, padx=20, sticky='NEWS')
+    input_initial_tuple_confirm.grid(row=4, column=0, pady=20, padx=20, sticky='E')
+    input_confirm_button_1.grid(row=10, column=0, pady=20, padx=20, sticky='W')
+    input_confirm_button_2.grid(row=10, column=1, pady=20, padx=20, sticky='E')
+    exit_game_button.grid(row=11, pady=20, padx=20, sticky='NEWS')
 
     G = nx.DiGraph()  # or DiGraph, MultiGraph, MultiDiGraph, etc
 
@@ -346,10 +359,10 @@ def main():
 
     while True:
         input_confirm_button_1["state"] = "enabled"
-        instruction_label.config(text="Spoiler: lege zunächst Zustände fest, auf denen gespielt werden soll.")
+        label_input_initial_tuple.config(text="Hier bitte Zustände festlegen, auf denen gespielt werden soll.")
         while True:
             input_confirm_button_1.wait_variable(var_1)
-            initial_tuple = spoiler_input.split(', ')
+            initial_tuple = initial_tuple.split(', ')
             # print('Länge', len(initial_tuple))
             if len(initial_tuple) != 2:
                 instruction_label.config(text="Es müssen genau zwei initiale Zustände angegeben werden, bitte diese mit Komma trennen")
@@ -359,25 +372,25 @@ def main():
             else:
                 continue
 
-        instruction_label.config(text="Spoiler bitte Zustand aus Starttupel wählen")
+        instruction_label.config(text="Angreifer bitte Zustand aus Starttupel wählen")
         while True:
             input_confirm_button_2["state"] = "disabled"
             input_confirm_button_1.wait_variable(var_1)
             state_1 = spoiler_input
             if state_1 not in total_state_space:
-                instruction_label.config(text="Ungültiger Zustand, nochmal Zustand wählen Spieler 1")
+                instruction_label.config(text="Ungültiger Zustand, nochmal Zustand wählen Angreifer")
                 continue
             else:
                 break
-        # todo das erübrigt sich jetzt eigentlich, aber egal
+        # hier überprüfen ob in staertupel
         input_confirm_button_2["state"] = "enabled"
-        instruction_label.config(text="Duplicator bitte den anderen Zustand aus Starttupel wählen")
+        instruction_label.config(text="Verteidiger bitte den anderen Zustand aus Starttupel wählen")
         while True:
             input_confirm_button_1["state"] = "disabled"
             input_confirm_button_2.wait_variable(var_2)
             state_2 = duplicator_input
             if state_2 not in total_state_space:
-                instruction_label.config(text="Ungültiger Zustand, nochmal einen Zustand wählen Duplicator")
+                instruction_label.config(text="Ungültiger Zustand, nochmal einen Zustand wählen Verteidiger")
                 continue
             else:
                 break
@@ -397,7 +410,7 @@ def main():
                 # text_var = tk.StringVar
                 input_confirm_button_1["state"] = "disabled"
                 input_confirm_button_2["state"] = "disabled"
-                score_label.config(text="Ja, die sind bisimular, Duplicator hat für das Paar x y gewonnen")
+                score_label.config(text="Die Zustände sind bisimular, der Verteidiger hat für das Paar gewonnen")
                 # flag auf true setzen
                 # states_need_to_be_picked_again = True
                 # hier kann direkt abgebrochen werden, da Dublicator gewonnen hat
@@ -406,7 +419,7 @@ def main():
                 # print(state_in_NH_1, state_in_NH_2)
                 input_confirm_button_1["state"] = "disabled"
                 input_confirm_button_2["state"] = "disabled"
-                score_label.config(text="Nicht bisimular, Spoiler hat gewonnen")
+                score_label.config(text="Nicht bisimular, der Angreifer hat gewonnen")
                 # hier wird geprüft, ob Dublicator hätte gewinnen können
                 # hier brauche ich die initialen Zustände
                 if (initial_tuple[0], initial_tuple[1]) in bisimulation:
@@ -417,7 +430,7 @@ def main():
             if (state_1 in without_nh and state_2 in with_nh):
                 print(state_in_NH_1, state_in_NH_2)
                 # todo hier noch prüfen ob wirklich bisimular
-                score_label.config(text="der Spoiler kann nicht mehr wählen, Dublicator hat gewonnen")
+                score_label.config(text="Der Angreifer kann nicht mehr wählen, der Verteidiger hat gewonnen!")
                 if (initial_tuple[0], initial_tuple[1]) not in bisimulation:
                     smart_remarks_label.config(text='Die Zustände waren eigentlich nicht bisimular!')
                 # if (state_in_NH_1, state_in_NH_2) in bisimulation:
@@ -426,17 +439,17 @@ def main():
                 break
 
             if state_1 in with_nh and state_2 in with_nh:
-                instruction_label.config(text="jetzt NH wählen Spoiler, sind mehrere Zustände darin, diese bitte mit Komma trennen")
+                instruction_label.config(text="Jetzt bitte ein Element aus NH wählen Spoiler, sind mehrere Zustände darin, diese bitte mit Komma trennen")
                 while True:
                     input_confirm_button_1.wait_variable(var_1)
                     nh_1__ = spoiler_input
                     nh_1_ = nh_1__.lstrip().split(', ')
-                    print('so sieht ein element im Nh aus', nh_1_)
+                    #print('so sieht ein element im Nh aus', nh_1_)
 
-                    print('final dict', dict_to_chose)
+                    #print('final dict', dict_to_chose)
                     nh_1 = nh_1_[0]
                     if nh_1_ not in uc_dict.get(state_1) and nh_1_ not in dict_to_chose.get(state_1):
-                        instruction_label.config(text="Das ist kein NH des gewählten Zustandes, nochmal")
+                        instruction_label.config(text="Das ist kein Element im NH des gewählten Zustandes, nochmal")
                         continue
                     else:
                         break
@@ -447,7 +460,7 @@ def main():
                 #     if nh_1 not in item:
                 #         print('Das ist kein NH des gewählten Zustandes')
                 #         break
-                instruction_label.config(text="jetzt NH wählen Duplicator, sind mehrere Zustände darin, diese bitte mit Komma trennen")
+                instruction_label.config(text="Jetzt bitte Element aus NH wählen Verteidiger, sind mehrere Zustände darin, diese bitte mit Komma trennen")
                 while True:
                     input_confirm_button_2.wait_variable(var_2)
                     nh_2__ = duplicator_input
@@ -456,12 +469,12 @@ def main():
                     # print(nh_2_)
                     # hier muss wahrscheinlich der input noch angepasst werden, vielleicht mit list()
                     if nh_2_ not in uc_dict.get(state_2) and nh_2_ not in dict_to_chose.get(state_2):
-                        instruction_label.config(text="Das ist kein NH des gewählten Zustandes, nochmal")
+                        instruction_label.config(text="Das ist kein Element im NH des gewählten Zustandes, nochmal")
                         continue
                     else:
                         break
                 # jetz muss Spieler 1 in den Nh von Spieler 2 wechseln
-                instruction_label.config(text="Spieler 1: wähle Zustand aus NH von Spieler 2")
+                instruction_label.config(text="Angreifer: wähle Zustand aus NH vom Verteidiger")
                 while True:
                     input_confirm_button_1.wait_variable(var_1)
                     state_in_NH_1 = spoiler_input
@@ -470,7 +483,7 @@ def main():
                         continue
                     else:
                         break
-                instruction_label.config(text="Spieler 2: wähle Zustand aus NH von Spoiler, der dazu bisimular ist ")
+                instruction_label.config(text="Verteidiger: wähle Zustand aus NH von Angreifer!")
                 while True:
                     input_confirm_button_2.wait_variable(var_2)
                     state_in_NH_2 = duplicator_input
