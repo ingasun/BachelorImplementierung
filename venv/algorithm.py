@@ -12,11 +12,12 @@ upper_closure_list_sytem_2 = [[['s2'], [['t2']]]]
 all_closures = upper_closure_list_sytem_1 + upper_closure_list_sytem_2
 # print(all_closures)
 # make dict for state and its uc
-uc_dictionary = {}
-for item in all_closures:
-    for val in item[0]:
-        uc_dictionary[val] = item[1]
-print(uc_dictionary)
+
+# uc_dictionary = {}
+# for item in all_closures:
+#     for val in item[0]:
+#         uc_dictionary[val] = item[1]
+# print(uc_dictionary)
 # print(all_closures)
 
 
@@ -46,7 +47,7 @@ def calculate_coarsest_relation(states_1, states_2):
     return list(r_0)
 
 
-test_relation = calculate_coarsest_relation(state_list_1, state_list_2)
+# test_relation = calculate_coarsest_relation(state_list_1, state_list_2)
 
 
 def get_equivalence_classes(current_relation, states):
@@ -93,7 +94,7 @@ def get_list_with_without_neighbourhoods(uc_dict, states):   # funktion nimmt ei
 # bloks = calculate_blocks(clas)
 
 
-def calculate_new_relation(blocks_, an_relation):
+def calculate_new_relation(uc_dictionary, blocks_, an_relation):
     update_happened = False
     # eliminate empty list from blocks
     blocks = [x for x in blocks_ if x]
@@ -193,7 +194,7 @@ def calculate_new_relation(blocks_, an_relation):
 # print('das ist eine iteration', calculate_new_relation(bloks, an_relation))
 
 
-def calculate_bisimulation(uc_dict, states):
+def calculate_bisimulation(dict_to_choose, uc_dict, states):
     coarsest_relation = calculate_coarsest_relation(state_list_1, state_list_2)
     # current_relation = coarsest_relation # muss immer die zuletzt berechnete sein
     # am besten hier direkt die mit NH von denen ohne trennen
@@ -214,7 +215,7 @@ def calculate_bisimulation(uc_dict, states):
         # print('classes', classes)
         blocks = calculate_blocks(classes)
         # print('blocks', blocks)
-        updateshappened, relation_before = calculate_new_relation(blocks, current_relation)
+        updateshappened, relation_before = calculate_new_relation(dict_to_choose, blocks, current_relation)
         # print(updateshappened, relation_before)
     return current_relation
 

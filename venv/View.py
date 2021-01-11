@@ -92,7 +92,7 @@ def main():
 
     input_label_1 = Label(frame_1, text='Wieviele Zustände mit nichtleerem NH hat System 1?', padx=20, pady=10)
     input_entries_1 = Entry(frame_1, borderwidth=5, textvariable=num_1)
-    input_label_2 = Label(frame_2, text='Wieviele Zustände mit nichtleerem NH hat System 2', padx=20, pady=10)
+    input_label_2 = Label(frame_2, text='Wieviele Zustände mit nichtleerem NH hat System 2?', padx=20, pady=10)
     input_entries_2 = Entry(frame_2, borderwidth=5, textvariable=num_2)
     input_confirm_button2 = Button(frame_2, text='Eingabe bestätigen', command=lambda: get_values_to_create_boxes())
     switch_to_next_window_button = Button(frame_2, text='Weiter zur nächsten Eingabe', command=close_window)
@@ -131,7 +131,7 @@ def main():
     # noch nicht gesetzt
     v3 = StringVar(frame_1, value="{}")
     # eingabefelder für graph 1
-    input_states_text = Label(frame_1, text='Zustände für Graph 1 angeben, bitte mit Leerzeichen trennen', padx=20, pady=10)
+    input_states_text = Label(frame_1, text='Zustände für Graph 1 angeben, bitte nur mit Leerzeichen trennen', padx=20, pady=10)
     input_states = Entry(frame_1, borderwidth=5, textvariable=default_state_string)
     input_uc_text = Label(frame_1, text='Zustände mit Minimalelementen angeben', padx=20, pady=10)
     input_description = Label(frame_1, text='Dazu Zustand mit Doppelpunkt von seinen Minimalelementen trennen', padx=20, pady=10)
@@ -162,9 +162,9 @@ def main():
     v2 = StringVar(frame_1, value="s2: t2")
 
     # eingabefelder für graph 2
-    input_states_text_2 = Label(frame_2, text='Zustände für Graph 2 angeben, bitte mit Leerzeichen trennen', padx=20, pady=10)
+    input_states_text_2 = Label(frame_2, text='Zustände für Graph 2 angeben, bitte nur mit Leerzeichen trennen', padx=20, pady=10)
     input_states_2 = Entry(frame_2, borderwidth=5, textvariable=default_state_string_2)
-    input_uc_text_2 = Label(frame_2, text='Zustände mit jeweiligen Minimalelementen angeben, Eingabe soll z.B so aussehen: s1: s1, t1; u1, v1', pady=10)
+    input_uc_text_2 = Label(frame_2, text='Zustände mit jeweiligen Minimalelementen angeben, die Eingabe soll z.B so aussehen: s1: s1, t1; u1, v1', pady=10)
 
     label_uc_2 = Label(frame_2, text='Zustand mit Minimalelementen', pady=20)
     for x in range(3, (int(number_of_states_with_uc_2) + 3)):
@@ -245,7 +245,7 @@ def main():
     label_input_player_2 = ttk.Label(frame, text='Eingabe Verteidiger')
     input_duplicator = ttk.Entry(frame)
     instruction_label = ttk.Label(frame, text='Hier werden gleich Anweisungen stehen')
-    score_label = ttk.Label(frame, text='Hier wird angezeigt, ob was bisimular ist')
+    score_label = ttk.Label(frame, text='Hier wird angezeigt, welcher Spieler gewonnen hat')
     smart_remarks_label = ttk.Label(frame, text='Hier wird angezeigt, ob unnötig verloren, bzw schlecht gespielt')
 
     input_initial_tuple_confirm = ttk.Button(frame, text='Okay!', command=get_input_initial_tuple)
@@ -262,12 +262,12 @@ def main():
     input_duplicator.grid(row=6, column=1, padx=20, sticky='E')
     instruction_label.grid(row=8, padx=20, sticky='EW')
     score_label.grid(row=11, padx=20, sticky='EW')
-    smart_remarks_label.grid(row=12, padx=20, pady=50, sticky='EW')
+    # smart_remarks_label.grid(row=12, padx=20, pady=50, sticky='EW')
 
     input_initial_tuple_confirm.grid(row=4, column=0, pady=20, padx=20, sticky='E')
     input_confirm_button_1.grid(row=10, column=0, pady=20, padx=20, sticky='W')
     input_confirm_button_2.grid(row=10, column=1, pady=20, padx=20, sticky='E')
-    exit_game_button.grid(row=11, pady=20, padx=20, sticky='NEWS')
+    exit_game_button.grid(row=13, pady=20, padx=20, sticky='NEWS')
 
     G = nx.DiGraph()  # or DiGraph, MultiGraph, MultiDiGraph, etc
 
@@ -317,7 +317,7 @@ def main():
     G_2.add_nodes_from(nh_state_list_2)
 
     # das layout muss nachdem alle Knoten und edges hinzugefügt wurden und bevor der graph gezeichnet wird gesetzt werden
-    pos = nx.nx_agraph.graphviz_layout(G_2, prog='dot')
+    pos = nx.nx_agraph.graphviz_layout(G_2, prog='circo')
     # pos = nx.kamada_kawai_layout(G)
     f_2 = plt.figure(figsize=(5, 5))
     canvas_2 = FigureCanvasTkAgg(f_2, root)
@@ -353,21 +353,22 @@ def main():
     # print('alt', uc_dict)
     total_state_space = state_list + state_list_2
     # print('state_space', total_state_space)
-    bisimulation = alg.calculate_bisimulation(uc_dict, total_state_space)
+    bisimulation = alg.calculate_bisimulation(uc_dict, dict_to_chose, total_state_space)
 
     # print(bisimulation)
 
     while True:
         input_confirm_button_1["state"] = "enabled"
         label_input_initial_tuple.config(text="Hier bitte Zustände festlegen, auf denen gespielt werden soll.")
+        # smart_remarks_label.config(text="Hier wird angezeigt, ob unnötig verloren, bzw schlecht gespielt")
         while True:
             input_confirm_button_1.wait_variable(var_1)
-            initial_tuple = initial_tuple.split(', ')
+            initial_tuple_ = initial_tuple.split(', ')
             # print('Länge', len(initial_tuple))
-            if len(initial_tuple) != 2:
+            if len(initial_tuple_) != 2:
                 instruction_label.config(text="Es müssen genau zwei initiale Zustände angegeben werden, bitte diese mit Komma trennen")
                 continue
-            if (initial_tuple[0] in total_state_space) and (initial_tuple[1] in total_state_space):
+            if (initial_tuple_[0] in total_state_space) and (initial_tuple_[1] in total_state_space):
                 break
             else:
                 continue
@@ -397,6 +398,7 @@ def main():
         input_confirm_button_1["state"] = "enabled"
 
         while True:
+            label_input_initial_tuple.config(text=" ")
             # if states_need_to_be_picked_again:
             #     print('bin hier')
             #     # score_label.config(text="Ja, die waren bisimular")
@@ -410,7 +412,12 @@ def main():
                 # text_var = tk.StringVar
                 input_confirm_button_1["state"] = "disabled"
                 input_confirm_button_2["state"] = "disabled"
-                score_label.config(text="Die Zustände sind bisimular, der Verteidiger hat für das Paar gewonnen")
+                score_label.config(text="Der Angreifer kann im nächsten Schritt nicht wählen, der Verteidiger hat für das Paar gewonnen")
+                print((initial_tuple_[0], initial_tuple_[1]))
+                if (initial_tuple_[0], initial_tuple_[1]) not in bisimulation:
+                    # smart_remarks_label.config(text='Die Zustände waren eigentlich nicht bisimular!')
+                    messagebox.showinfo("Info", "Die Zustände waren eigentlich nicht bisimular!")
+                instruction_label.config(text=" ")
                 # flag auf true setzen
                 # states_need_to_be_picked_again = True
                 # hier kann direkt abgebrochen werden, da Dublicator gewonnen hat
@@ -419,20 +426,24 @@ def main():
                 # print(state_in_NH_1, state_in_NH_2)
                 input_confirm_button_1["state"] = "disabled"
                 input_confirm_button_2["state"] = "disabled"
-                score_label.config(text="Nicht bisimular, der Angreifer hat gewonnen")
+                instruction_label.config(text=" ")
+                score_label.config(text="Der Verteidiger kann im nächsten Schritt nicht mehr wählen, der Angreifer hat gewonnen")
                 # hier wird geprüft, ob Dublicator hätte gewinnen können
                 # hier brauche ich die initialen Zustände
-                if (initial_tuple[0], initial_tuple[1]) in bisimulation:
-                    smart_remarks_label.config(text='Die Zustände waren eigentlich bisimular!')
+                if (initial_tuple_[0], initial_tuple_[1]) in bisimulation:
+                    messagebox.showinfo("Info", "Die Zustände waren eigentlich bisimular, aber der Angreifer hat gewonnen!")
+                    # smart_remarks_label.config(text='Die Zustände waren eigentlich bisimular, aber der Angreifer hat gewonnen!')
                 # break ist hier richtig - nicht wegmachen
                 break
             # macht doch keinen Sinn, weil die einfach nicht bisimular sind
             if (state_1 in without_nh and state_2 in with_nh):
-                print(state_in_NH_1, state_in_NH_2)
+               # print(state_in_NH_1, state_in_NH_2)
                 # todo hier noch prüfen ob wirklich bisimular
-                score_label.config(text="Der Angreifer kann nicht mehr wählen, der Verteidiger hat gewonnen!")
-                if (initial_tuple[0], initial_tuple[1]) not in bisimulation:
-                    smart_remarks_label.config(text='Die Zustände waren eigentlich nicht bisimular!')
+                instruction_label.config(text=" ")
+                score_label.config(text="Der Angreifer kann im nächsten Schritt nicht mehr wählen, der Verteidiger hat gewonnen!")
+                if (initial_tuple_[0], initial_tuple_[1]) not in bisimulation:
+                    messagebox.showinfo("Info", "Die Zustände waren eigentlich nicht bisimular!")
+                    # smart_remarks_label.config(text='Die Zustände waren eigentlich nicht bisimular!')
                 # if (state_in_NH_1, state_in_NH_2) in bisimulation:
                 #     smart_remarks_label.config(text='Die Zustände waren aber eigentlich nicht bisimular!')
 
@@ -446,10 +457,14 @@ def main():
                     nh_1_ = nh_1__.lstrip().split(', ')
                     #print('so sieht ein element im Nh aus', nh_1_)
 
-                    #print('final dict', dict_to_chose)
+                    print('final dict', dict_to_chose)
+                    # print(dict_to_chose.get(state_1))
+                    print(nh_1_)
+                    print(uc_dict.get(state_1))
+                    print(dict_to_chose.get(state_1))
                     nh_1 = nh_1_[0]
                     if nh_1_ not in uc_dict.get(state_1) and nh_1_ not in dict_to_chose.get(state_1):
-                        instruction_label.config(text="Das ist kein Element im NH des gewählten Zustandes, nochmal")
+                        instruction_label.config(text="Das ist kein Element im NH des gewählten Zustandes, bitte nochmal wählen")
                         continue
                     else:
                         break
@@ -467,13 +482,33 @@ def main():
                     nh_2_ = nh_2__.lstrip().split(', ')
                     nh_2 = nh_2_[0]
                     # print(nh_2_)
+                    print(nh_2_)
+                    print(uc_dict.get(state_2))
+                    print(dict_to_chose.get(state_2))
                     # hier muss wahrscheinlich der input noch angepasst werden, vielleicht mit list()
                     if nh_2_ not in uc_dict.get(state_2) and nh_2_ not in dict_to_chose.get(state_2):
-                        instruction_label.config(text="Das ist kein Element im NH des gewählten Zustandes, nochmal")
+                        instruction_label.config(text="Das ist kein Element im NH des gewählten Zustandes, bitte nochmal wählen")
                         continue
                     else:
                         break
-                # jetz muss Spieler 1 in den Nh von Spieler 2 wechseln
+                # hier wird überprüft, ob einer der Spieler die leere Menge gewählt hat
+                print('bisimulation', bisimulation)
+                if nh_1_ == [''] or nh_2_ == ['']:
+                    if nh_1_ in [['']] and nh_2_ not in [['']]:
+                        score_label.config(text="Der Verteidiger kann im nächsten Schritt keinen Zustand mehr wählen, der Angreifer hat gewonnen!")
+                        if (initial_tuple_[0], initial_tuple_[1]) in bisimulation:
+                            # smart_remarks_label.config(text='Die Zustände waren eigentlich bisimular!')
+                            messagebox.showinfo("Info", "Die Zustände waren eigentlich bisimular!")
+
+                    else:
+                        score_label.config(text="Der Angreifer kann im nächsten Schritt keinen Zustand mehr wählen, der Verteidiger hat gewonnen!")
+                        if (initial_tuple_[0], initial_tuple_[1]) not in bisimulation:
+                            # smart_remarks_label.config(text='Die Zustände waren eigentlich nicht bisimular!')
+                            messagebox.showinfo("Info", "Die Zustände waren eigentlich nicht bisimular!")
+
+                    break
+
+
                 instruction_label.config(text="Angreifer: wähle Zustand aus NH vom Verteidiger")
                 while True:
                     input_confirm_button_1.wait_variable(var_1)
