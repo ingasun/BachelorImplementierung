@@ -85,10 +85,7 @@ def calculate_uc_for_single_uc_elements(state_list, uc):
     return list_for_graph
 
 
-state_list = ['s1', 't1', 'u1', 'v1']
-uc_ = [['s1', 't1']]
-calculate_uc_for_single_uc_elements(state_list, uc_)
-#sublist = [['s1'], [['s1'], ['s1', 't1']]]
+
 
 
 def get_complete_graph_stuff_for_a_state(state_list, sublist):
@@ -204,5 +201,3 @@ def get_all_graph_stuff_for_system(state_list, list_with_all_uc_input):
     return intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state, dic_to_chose_from
 
 
-
-# print('so siet das aus', get_all_graph_stuff_for_system(states, list_with_all_input))

@@ -1,15 +1,15 @@
 from copy import deepcopy
 import itertools
 
-state_list_1= {'s1', 't1', 'u1', 'v1'}
-state_list_2 = {'s2', 't2'}
-all_states = state_list_1.union(state_list_2)
+# state_list_1= {'s1', 't1', 'u1', 'v1'}
+# state_list_2 = {'s2', 't2'}
+# all_states = state_list_1.union(state_list_2)
 # uc_dict = {}
 # upper closures der Zustände
 # vielleicht als dictionary
-upper_closure_list_sytem_1 = [[['s1'], [['t1'], ['u1', 'v1']]], [['u1'], [['u1']]]]
-upper_closure_list_sytem_2 = [[['s2'], [['t2']]]]
-all_closures = upper_closure_list_sytem_1 + upper_closure_list_sytem_2
+# upper_closure_list_sytem_1 = [[['s1'], [['t1'], ['u1', 'v1']]], [['u1'], [['u1']]]]
+# upper_closure_list_sytem_2 = [[['s2'], [['t2']]]]
+# all_closures = upper_closure_list_sytem_1 + upper_closure_list_sytem_2
 # print(all_closures)
 # make dict for state and its uc
 
@@ -41,8 +41,8 @@ def list_powerset(lst):
 
 def calculate_coarsest_relation(states_1, states_2):
     # Mengen vereinigen
-    all_states = states_1.union(states_2)
-    all_states_ = states_2.union(states_1)
+    all_states = set(states_1).union(set(states_2))
+    all_states_ = set(states_2).union(set(states_1))
     r_0 = ((x, y) for x, y in itertools.product(all_states, all_states_))
     return list(r_0)
 
@@ -194,7 +194,7 @@ def calculate_new_relation(uc_dictionary, blocks_, an_relation):
 # print('das ist eine iteration', calculate_new_relation(bloks, an_relation))
 
 
-def calculate_bisimulation(dict_to_choose, uc_dict, states):
+def calculate_bisimulation(dict_to_choose, uc_dict, states, state_list_1, state_list_2):
     coarsest_relation = calculate_coarsest_relation(state_list_1, state_list_2)
     # current_relation = coarsest_relation # muss immer die zuletzt berechnete sein
     # am besten hier direkt die mit NH von denen ohne trennen
@@ -211,6 +211,7 @@ def calculate_bisimulation(dict_to_choose, uc_dict, states):
         current_relation = deepcopy(relation_before)
         # temp_rel = current_relation
         # hier kommen jetzt die Funktionsaufrufe
+        all_states = set(state_list_1).union(set(state_list_2))
         classes = get_equivalence_classes(current_relation, all_states)
         # print('classes', classes)
         blocks = calculate_blocks(classes)

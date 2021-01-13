@@ -13,9 +13,20 @@ import networkx as nx
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 def main():
+
+
+    def get_values_to_create_boxes():
+        global sys_1, sys_2
+        try:
+            sys_1_ = int(input_entries_1.get())
+            sys_2_ = int(input_entries_2.get())
+        except ValueError:
+            messagebox.showerror('Fehler', 'Bitte nur Ganzzahlen eingeben')
+        else:
+            sys_1 = int(input_entries_1.get())
+            sys_2 = int(input_entries_2.get())
+
     list_with_all_uc_entries = []
-
-
     def store_all_upper_closures():
         global list_with_all_uc_stuff
         global state_list
@@ -31,8 +42,12 @@ def main():
             if entry.get() is '':
                 return messagebox.showwarning('Warnung', 'Die Eingabe darf nicht leer sein')
             else:
-                list_with_uc_content.append(entry.get())
-                list_with_all_uc_stuff, uc_dict, nh_state_list = pi.process_input(list_with_uc_content)
+                try:
+                    list_with_uc_content.append(entry.get())
+                    list_with_all_uc_stuff, uc_dict, nh_state_list = pi.process_input(list_with_uc_content)
+                except Exception:
+                    messagebox.showerror('Something went wrong!')
+
         # print(list_with_uc_content)
 
 
@@ -56,22 +71,11 @@ def main():
             if entry.get() is '':
                 return messagebox.showwarning('Warnung', 'Die Eingabe darf nicht leer sein')
             else:
-                list_with_uc_content_2.append(entry.get())
-                list_with_all_uc_stuff_2, uc_dict_2, nh_state_list_2 = pi.process_input(list_with_uc_content_2)
-
-    def get_values_to_create_boxes():
-        global sys_1, sys_2
-        try:
-            sys_1_ = int(input_entries_1.get())
-            sys_2_ = int(input_entries_2.get())
-        except ValueError:
-            messagebox.showerror('Fehler', 'Bitte nur Ganzzahlen eingeben')
-        else:
-            sys_1 = int(input_entries_1.get())
-            sys_2 = int(input_entries_2.get())
-
-
-    # Input was integers, continue as normal
+                try:
+                    list_with_uc_content_2.append(entry.get())
+                    list_with_all_uc_stuff_2, uc_dict_2, nh_state_list_2 = pi.process_input(list_with_uc_content_2)
+                except Exception:
+                    messagebox.showerror('Something went wrong!')
 
 
     def close_window():
@@ -81,7 +85,7 @@ def main():
     # Fenster zur Bestimmung wie viele entry boxes
     root = Tk()
     root.title('Anzahl Zustände mit nichtleerem NH')
-    root.geometry('400x400')
+    root.geometry('700x700')
     frame_1 = LabelFrame(root, text='Eingabe System 1', font=11, padx=130, pady=80)
     frame_2 = LabelFrame(root, text='Eingabe System 2', font=11, padx=130, pady=80)
     frame_1.grid(row=0, sticky='ew')
@@ -90,9 +94,9 @@ def main():
     num_1 = IntVar(frame_1, value=1)
     num_2 = IntVar(frame_2, value=1)
 
-    input_label_1 = Label(frame_1, text='Wieviele Zustände mit nichtleerem NH hat System 1?', padx=20, pady=10)
+    input_label_1 = Label(frame_1, text='Wieviele Zustände mit nichtleerem NH hat System 1? (es ist mind. einer erforderlich)', padx=20, pady=10)
     input_entries_1 = Entry(frame_1, borderwidth=5, textvariable=num_1)
-    input_label_2 = Label(frame_2, text='Wieviele Zustände mit nichtleerem NH hat System 2?', padx=20, pady=10)
+    input_label_2 = Label(frame_2, text='Wieviele Zustände mit nichtleerem NH hat System 2? (es ist mind. einer erforderlich)', padx=20, pady=10)
     input_entries_2 = Entry(frame_2, borderwidth=5, textvariable=num_2)
     input_confirm_button2 = Button(frame_2, text='Eingabe bestätigen', command=lambda: get_values_to_create_boxes())
     switch_to_next_window_button = Button(frame_2, text='Weiter zur nächsten Eingabe', command=close_window)
@@ -132,7 +136,7 @@ def main():
     v3 = StringVar(frame_1, value="{}")
     # eingabefelder für graph 1
     input_states_text = Label(frame_1, text='Zustände für Graph 1 angeben, bitte nur mit Leerzeichen trennen', padx=20, pady=10)
-    input_states = Entry(frame_1, borderwidth=5, textvariable=default_state_string)
+    input_states = Entry(frame_1, borderwidth=5)
     input_uc_text = Label(frame_1, text='Zustände mit Minimalelementen angeben', padx=20, pady=10)
     input_description = Label(frame_1, text='Dazu Zustand mit Doppelpunkt von seinen Minimalelementen trennen', padx=20, pady=10)
     input_description_line_2 = Label(frame_1, text='Mehrere Minimalelemente mit Semikolon voneinander trennen', padx=20, pady=10)
@@ -163,12 +167,12 @@ def main():
 
     # eingabefelder für graph 2
     input_states_text_2 = Label(frame_2, text='Zustände für Graph 2 angeben, bitte nur mit Leerzeichen trennen', padx=20, pady=10)
-    input_states_2 = Entry(frame_2, borderwidth=5, textvariable=default_state_string_2)
+    input_states_2 = Entry(frame_2, borderwidth=5)
     input_uc_text_2 = Label(frame_2, text='Zustände mit jeweiligen Minimalelementen angeben, die Eingabe soll z.B so aussehen: s1: s1, t1; u1, v1', pady=10)
 
     label_uc_2 = Label(frame_2, text='Zustand mit Minimalelementen', pady=20)
     for x in range(3, (int(number_of_states_with_uc_2) + 3)):
-        uc_input_ = Entry(frame_2, borderwidth=5, textvariable=v2)
+        uc_input_ = Entry(frame_2, borderwidth=5)
         uc_input_.grid(row=x, column=1, pady=5, padx=5)
         list_with_all_uc_entries_2.append(uc_input_)
 
@@ -187,17 +191,19 @@ def main():
 
 
     # hier jetzt die gesamtlisten der edges und nodes erstellen
+    try:
+        intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state, dict_to_chose = ucd.get_all_graph_stuff_for_system(state_list, list_with_all_uc_stuff) # vorher uc_input...
+        # print(intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state)
+        final_intermediate_list = [(e) for e in intermediate_node_list if e not in nh_state_list]
+        # hier wird noch mal die Funktion für den zweiten NHF aufrufen
+        intermediate_node_list_2, edgelist_main_states_2, label_intermediate_states_2, label_node_main_state_2, dict_to_chose_2 = ucd.get_all_graph_stuff_for_system(state_list_2, list_with_all_uc_stuff_2) # vorher uc_input...
+        # print(intermediate_node_list_2, edgelist_main_states_2, label_intermediate_states_2, label_node_main_state_2)
+        final_intermediate_list_2 = [(e) for e in intermediate_node_list_2 if e not in nh_state_list_2]
 
-    intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state, dict_to_chose = ucd.get_all_graph_stuff_for_system(state_list, list_with_all_uc_stuff) # vorher uc_input...
-    # print(intermediate_node_list, edgelist_main_states, label_intermediate_states, label_node_main_state)
-    final_intermediate_list = [(e) for e in intermediate_node_list if e not in nh_state_list]
-    # hier wird noch mal die Funktion für den zweiten NHF aufrufen
-    intermediate_node_list_2, edgelist_main_states_2, label_intermediate_states_2, label_node_main_state_2, dict_to_chose_2 = ucd.get_all_graph_stuff_for_system(state_list_2, list_with_all_uc_stuff_2) # vorher uc_input...
-    # print(intermediate_node_list_2, edgelist_main_states_2, label_intermediate_states_2, label_node_main_state_2)
-    final_intermediate_list_2 = [(e) for e in intermediate_node_list_2 if e not in nh_state_list_2]
-
-    # neue andersfarbige Zustände machen:
-    uc_dict.values()
+        # neue andersfarbige Zustände machen:
+        uc_dict.values()
+    except Exception:
+        messagebox.showerror('Something went wrong!')
 
 
     def get_input_initial_tuple():
@@ -341,23 +347,17 @@ def main():
     #plt.show()
     canvas_2.get_tk_widget().grid(column=1, row=20, sticky='s')
 
-    # uc_dict = {'s1': [['t1'], ['u1', 'v1']], 'u1': [['u1']], 's2': [['t2']]}
-    # print(uc_dict)
-    # print(uc_dict_2)
-    # print('werte aus uc_dict', uc_dict.values())
-    # werte aus uc_dict dict_values([[['s1', 't1']]])
+
     uc_dict.update(uc_dict_2)
     dict_to_chose.update(dict_to_chose_2)
-    # print(uc_dict)
-    # print('merged', uc_dict)
-    # print('alt', uc_dict)
+
     total_state_space = state_list + state_list_2
-    # print('state_space', total_state_space)
-    bisimulation = alg.calculate_bisimulation(uc_dict, dict_to_chose, total_state_space)
+    bisimulation = alg.calculate_bisimulation(uc_dict, dict_to_chose, total_state_space, state_list, state_list_2)
 
     # print(bisimulation)
 
     while True:
+        #print('bisimulation', bisimulation)
         input_confirm_button_1["state"] = "enabled"
         label_input_initial_tuple.config(text="Hier bitte Zustände festlegen, auf denen gespielt werden soll.")
         # smart_remarks_label.config(text="Hier wird angezeigt, ob unnötig verloren, bzw schlecht gespielt")
@@ -413,7 +413,7 @@ def main():
                 input_confirm_button_1["state"] = "disabled"
                 input_confirm_button_2["state"] = "disabled"
                 score_label.config(text="Der Angreifer kann im nächsten Schritt nicht wählen, der Verteidiger hat für das Paar gewonnen")
-                print((initial_tuple_[0], initial_tuple_[1]))
+                #print((initial_tuple_[0], initial_tuple_[1]))
                 if (initial_tuple_[0], initial_tuple_[1]) not in bisimulation:
                     # smart_remarks_label.config(text='Die Zustände waren eigentlich nicht bisimular!')
                     messagebox.showinfo("Info", "Die Zustände waren eigentlich nicht bisimular!")
@@ -438,7 +438,7 @@ def main():
             # macht doch keinen Sinn, weil die einfach nicht bisimular sind
             if (state_1 in without_nh and state_2 in with_nh):
                # print(state_in_NH_1, state_in_NH_2)
-                # todo hier noch prüfen ob wirklich bisimular
+
                 instruction_label.config(text=" ")
                 score_label.config(text="Der Angreifer kann im nächsten Schritt nicht mehr wählen, der Verteidiger hat gewonnen!")
                 if (initial_tuple_[0], initial_tuple_[1]) not in bisimulation:
@@ -450,18 +450,18 @@ def main():
                 break
 
             if state_1 in with_nh and state_2 in with_nh:
-                instruction_label.config(text="Jetzt bitte ein Element aus NH wählen Spoiler, sind mehrere Zustände darin, diese bitte mit Komma trennen")
+                instruction_label.config(text="Jetzt bitte ein Element aus NH wählen Angreifer, sind mehrere Zustände darin, diese bitte mit Komma trennen")
                 while True:
                     input_confirm_button_1.wait_variable(var_1)
                     nh_1__ = spoiler_input
                     nh_1_ = nh_1__.lstrip().split(', ')
                     #print('so sieht ein element im Nh aus', nh_1_)
 
-                    print('final dict', dict_to_chose)
+                    # print('final dict', dict_to_chose)
                     # print(dict_to_chose.get(state_1))
-                    print(nh_1_)
-                    print(uc_dict.get(state_1))
-                    print(dict_to_chose.get(state_1))
+                    # print(nh_1_)
+                    # print(uc_dict.get(state_1))
+                    # print(dict_to_chose.get(state_1))
                     nh_1 = nh_1_[0]
                     if nh_1_ not in uc_dict.get(state_1) and nh_1_ not in dict_to_chose.get(state_1):
                         instruction_label.config(text="Das ist kein Element im NH des gewählten Zustandes, bitte nochmal wählen")
@@ -481,10 +481,6 @@ def main():
                     nh_2__ = duplicator_input
                     nh_2_ = nh_2__.lstrip().split(', ')
                     nh_2 = nh_2_[0]
-                    # print(nh_2_)
-                    print(nh_2_)
-                    print(uc_dict.get(state_2))
-                    print(dict_to_chose.get(state_2))
                     # hier muss wahrscheinlich der input noch angepasst werden, vielleicht mit list()
                     if nh_2_ not in uc_dict.get(state_2) and nh_2_ not in dict_to_chose.get(state_2):
                         instruction_label.config(text="Das ist kein Element im NH des gewählten Zustandes, bitte nochmal wählen")
@@ -492,7 +488,7 @@ def main():
                     else:
                         break
                 # hier wird überprüft, ob einer der Spieler die leere Menge gewählt hat
-                print('bisimulation', bisimulation)
+                # print('bisimulation', bisimulation)
                 if nh_1_ == [''] or nh_2_ == ['']:
                     if nh_1_ in [['']] and nh_2_ not in [['']]:
                         score_label.config(text="Der Verteidiger kann im nächsten Schritt keinen Zustand mehr wählen, der Angreifer hat gewonnen!")
